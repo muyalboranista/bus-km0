@@ -6,7 +6,8 @@
   <title>El Bus KM0</title>
   <link rel="preload" href="superlumina.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="cuerpo.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css" />
+  <!-- cache-busting -->
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <header class="hero">
@@ -20,24 +21,18 @@
               <stop offset="100%" stop-color="#ac1427"/>
             </linearGradient>
           </defs>
-          <!-- cuerpo -->
           <rect x="20" y="40" rx="18" ry="18" width="480" height="110" fill="url(#busShade)" />
-          <!-- ventanillas -->
           <rect x="60" y="60" width="340" height="40" rx="6" fill="#f5f3f0" opacity="0.85"/>
-          <!-- siluetas mínimas -->
           <circle cx="95" cy="80" r="12" fill="#c7c7c7" />
           <circle cx="135" cy="80" r="12" fill="#c7c7c7" />
           <circle cx="175" cy="80" r="12" fill="#c7c7c7" />
           <circle cx="215" cy="80" r="12" fill="#c7c7c7" />
-          <!-- conductor -->
           <rect x="410" y="60" width="60" height="40" rx="6" fill="#dcdcdc" opacity="0.85"/>
           <circle cx="440" cy="80" r="12" fill="#bdbdbd" />
-          <!-- ruedas -->
           <circle cx="120" cy="150" r="22" fill="#111" />
           <circle cx="380" cy="150" r="22" fill="#111" />
           <circle cx="120" cy="150" r="12" fill="#3a3a3a" />
           <circle cx="380" cy="150" r="12" fill="#3a3a3a" />
-          <!-- rótulo KM0 -->
           <text x="70" y="125" font-size="56" fill="#ffffff"
                 font-family="Superlumina, system-ui, sans-serif" letter-spacing="2">KM0</text>
         </svg>
@@ -56,18 +51,9 @@
   <section class="howto">
     <div class="howto-inner">
       <ol class="steps">
-        <li>
-          <div class="step-icon">💿</div>
-          <div class="step-text">Compra el <strong>disco físico</strong>.</div>
-        </li>
-        <li>
-          <div class="step-icon">📸</div>
-          <div class="step-text">Cuando te llegue, hazte una <strong>foto con él</strong>.</div>
-        </li>
-        <li>
-          <div class="step-icon">📍</div>
-          <div class="step-text">Súbela indicando <strong>Ciudad</strong> y <strong>País</strong>.</div>
-        </li>
+        <li><div class="step-icon">💿</div><div class="step-text">Compra el <strong>disco físico</strong>.</div></li>
+        <li><div class="step-icon">📸</div><div class="step-text">Cuando te llegue, hazte una <strong>foto con él</strong>.</div></li>
+        <li><div class="step-icon">📍</div><div class="step-text">Súbela indicando <strong>Ciudad</strong> y <strong>País</strong>.</div></li>
       </ol>
       <a class="cta display" id="ctaLink" href="#" target="_blank" rel="noopener">Subirme al autobús</a>
     </div>
@@ -76,7 +62,7 @@
   <!-- GALERÍA -->
   <main class="gallery">
     <div class="gallery-inner">
-      <center><h2 class="display">Pasajeros del Bus KM0</h2></center>
+      <h2 class="display">Pasajeros del Bus KM0</h2>
       <div id="cards" class="cards"><!-- tarjetas desde app.js --></div>
     </div>
   </main>
@@ -85,6 +71,6 @@
     Hecho con ❤️ por alboranistas para alboranistas · <span class="brand">KM0</span>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

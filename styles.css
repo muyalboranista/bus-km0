@@ -25,17 +25,25 @@ body{
   margin:0;
   background:var(--km0-white);
   color:var(--km0-black);
-  /* Texto de lectura SIEMPRE en “Cuerpo” */
   font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height:1.45;
+  font-weight: 400; /* sin negrita */
 }
 
-/* Titulares en Superlumina (solo donde se aplique .display) */
+/* Solo titulares/CTA/contador con Superlumina */
 .display{
   font-family: "Superlumina", system-ui, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .02em;  /* un pelín de tracking para legibilidad */
-  font-weight: 400;        /* SIN negrita */
+  letter-spacing: .02em;
+  font-weight: 400; /* sin negrita */
+}
+
+/* Forzamos la fuente de lectura en bloques con mucho texto */
+.howto, .steps li, .step-text,
+.gallery, .cards, .card, .card .meta,
+.counter .label, .foot{
+  font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
 }
 
 /* HERO */
@@ -46,9 +54,7 @@ body{
 .hero-inner{
   max-width: 1100px;
   margin: 0 auto;
-  display:grid;
-  gap:2rem;
-  justify-items:center;
+  display:grid; gap:2rem; justify-items:center;
 }
 .bus-wrap{ position:relative; width:min(720px, 92vw); aspect-ratio: 52 / 19; }
 .bus{
@@ -68,12 +74,11 @@ body{
 .counter{ display:flex; flex-direction:column; align-items:center; gap:.35rem; }
 .counter .label{
   text-transform:uppercase; letter-spacing:.1em; font-size:.9rem; opacity:.85;
-  font-family: "Cuerpo", system-ui, sans-serif;  /* lectura */
 }
 .counter .value{
-  font-family:"Superlumina", system-ui, sans-serif;  /* display */
+  font-family:"Superlumina", system-ui, sans-serif;
   font-size: clamp(2.8rem, 7vw, 5rem);
-  font-weight: 400;                    /* SIN negrita */
+  font-weight: 400;
   text-align:center;
   padding:.25em .5em;
   background: var(--km0-red);
@@ -102,8 +107,8 @@ body{
   padding:.9rem 1.2rem; border-radius:999px;
   box-shadow: 0 6px 0 rgba(0,0,0,.2);
   transition: transform .15s ease, box-shadow .15s ease;
-  font-family:"Superlumina", system-ui, sans-serif; /* display */
-  text-transform:uppercase; letter-spacing:.02em; font-weight:400; /* SIN negrita */
+  font-family:"Superlumina", system-ui, sans-serif;
+  text-transform:uppercase; letter-spacing:.02em; font-weight:400;
   text-align:center;
 }
 .cta:hover{ transform: translateY(-2px) }
@@ -138,11 +143,5 @@ body{
 .brand{ color:var(--km0-red); font-weight:700 }
 
 /* ANIMACIONES */
-@keyframes busFloat{
-  0%,100%{ transform: translateY(0) }
-  50%{ transform: translateY(-6px) }
-}
-@keyframes shadowPulse{
-  0%,100%{ transform: translateY(8px) scaleX(1) }
-  50%{ transform: translateY(8px) scaleX(1.05) }
-}
+@keyframes busFloat{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
+@keyframes shadowPulse{ 0%,100%{ transform: translateY(8px) scaleX(1) } 50%{ transform: translateY(8px) scaleX(1.05) } }
