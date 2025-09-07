@@ -5,6 +5,7 @@
   --km0-black: #111111;
 }
 
+/* FUENTES */
 @font-face{
   font-family: "Superlumina";
   src: url("superlumina.woff2") format("woff2");
@@ -16,39 +17,28 @@
   font-display: swap;
 }
 
+/* BASE */
+*{ box-sizing: border-box }
+html,body{ height:100% }
+
 body{
   margin:0;
   background:var(--km0-white);
   color:var(--km0-black);
-  /* Todo el texto normal en la fuente de lectura */
+  /* Texto de lectura SIEMPRE en “Cuerpo” */
   font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height:1.45;
 }
-/* Clase para titulares en Superlumina (mayúsculas y tracking) */
+
+/* Titulares en Superlumina (solo donde se aplique .display) */
 .display{
   font-family: "Superlumina", system-ui, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .04em;
+  letter-spacing: .02em;  /* un pelín de tracking para legibilidad */
+  font-weight: 400;        /* SIN negrita */
 }
 
-/* Aplica la clase .display SOLO donde queramos Superlumina */
-.counter .value{ font-family:"Superlumina", system-ui, sans-serif; }
-.hero .label{ font-family:"Cuerpo", system-ui, sans-serif; text-transform:none; letter-spacing:0; }
-
-.gallery h2{ margin:0 0 1rem 0; font-size: clamp(1.5rem, 3.6vw, 2.2rem) }
-.gallery h2.display{ font-size: clamp(1.8rem, 4.2vw, 2.6rem) }
-.cta{ font-family:"Superlumina", system-ui, sans-serif; text-transform:uppercase; letter-spacing:.03em; }
-
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background:var(--km0-white);
-  color:var(--km0-black);
-  font-family: "Superlumina", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  line-height:1.35;
-}
-
+/* HERO */
 .hero{
   background: radial-gradient(1200px 300px at 50% 0%, #ffffff 0%, var(--km0-white) 60%, #ecebea 100%);
   padding: clamp(2rem, 4vw, 4rem) 1rem;
@@ -60,36 +50,31 @@ body{
   gap:2rem;
   justify-items:center;
 }
-.bus-wrap{
-  position:relative;
-  width:min(720px, 92vw);
-  aspect-ratio: 52 / 19;
-}
+.bus-wrap{ position:relative; width:min(720px, 92vw); aspect-ratio: 52 / 19; }
 .bus{
-  width:100%;
-  height:100%;
+  width:100%; height:100%;
   animation: busFloat 4s ease-in-out infinite;
   filter: drop-shadow(0 10px 12px rgba(0,0,0,.15));
 }
 .shadow{
   position:absolute; inset:auto 0 0 0;
-  height:18px;
-  margin:0 auto;
-  width:70%;
+  height:18px; margin:0 auto; width:70%;
   background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,.28), rgba(0,0,0,0));
   transform: translateY(8px);
   animation: shadowPulse 4s ease-in-out infinite;
 }
 
-.counter{
-  display:flex; flex-direction:column; align-items:center; gap:.35rem;
-}
+/* CONTADOR */
+.counter{ display:flex; flex-direction:column; align-items:center; gap:.35rem; }
 .counter .label{
   text-transform:uppercase; letter-spacing:.1em; font-size:.9rem; opacity:.85;
+  font-family: "Cuerpo", system-ui, sans-serif;  /* lectura */
 }
 .counter .value{
-  font-size: clamp(2.4rem, 7vw, 5rem);
-  font-weight: 700;
+  font-family:"Superlumina", system-ui, sans-serif;  /* display */
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 400;                    /* SIN negrita */
+  text-align:center;
   padding:.25em .5em;
   background: var(--km0-red);
   color:#fff;
@@ -97,44 +82,37 @@ body{
   box-shadow: 0 6px 0 rgba(0,0,0,.15);
 }
 
-.howto{
-  background: var(--km0-red);
-  color:#fff;
-  padding: clamp(2rem, 4vw, 3rem) 1rem;
-}
-.howto-inner{
-  max-width:1000px; margin:0 auto; text-align:center;
-}
+/* CÓMO PARTICIPAR */
+.howto{ background: var(--km0-red); color:#fff; padding: clamp(2rem, 4vw, 3rem) 1rem; }
+.howto-inner{ max-width:1000px; margin:0 auto; text-align:center; }
 .steps{
   list-style:none; padding:0; margin:0 0 1.5rem 0;
   display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;
 }
 .steps li{
-  background:#ffffff;
-  color:#000;
-  border-radius:.9rem;
-  padding:1rem;
+  background:#ffffff; color:#000; border-radius:.9rem; padding:1rem;
   display:flex; align-items:center; gap:.75rem; justify-content:center;
 }
 .step-icon{ font-size:1.4rem }
+
+/* BOTÓN CTA */
 .cta{
   display:inline-block;
-  background:#fff;
-  color:#000;
-  text-decoration:none;
-  padding:.9rem 1.2rem;
-  border-radius:999px;
-  font-weight:700;
-  transition: transform .15s ease, box-shadow .15s ease;
+  background:#fff; color:#000; text-decoration:none;
+  padding:.9rem 1.2rem; border-radius:999px;
   box-shadow: 0 6px 0 rgba(0,0,0,.2);
+  transition: transform .15s ease, box-shadow .15s ease;
+  font-family:"Superlumina", system-ui, sans-serif; /* display */
+  text-transform:uppercase; letter-spacing:.02em; font-weight:400; /* SIN negrita */
+  text-align:center;
 }
 .cta:hover{ transform: translateY(-2px) }
 
-.gallery{
-  padding: clamp(2rem, 4vw, 4rem) 1rem;
-}
+/* GALERÍA */
+.gallery{ padding: clamp(2rem, 4vw, 4rem) 1rem; }
 .gallery-inner{ max-width:1200px; margin:0 auto }
-.gallery h2{ margin:0 0 1rem 0; font-size: clamp(1.5rem, 3.6vw, 2.2rem) }
+.gallery h2{ margin:0 0 1rem 0; font-size: clamp(1.8rem, 4.2vw, 2.6rem) }
+
 .cards{
   display:grid;
   grid-template-columns: repeat(6, 1fr);
@@ -147,22 +125,19 @@ body{
   background:#fff; border:1px solid #e9e9e9; border-radius:14px; overflow:hidden;
   display:flex; flex-direction:column;
 }
-.card .ph{
-  aspect-ratio:1/1; background:#f0f0f0; display:block; width:100%; object-fit:cover;
-}
-.card .meta{ padding:.75rem .8rem; font-size:.92rem }
+.card .ph{ aspect-ratio:1/1; background:#f0f0f0; display:block; width:100%; object-fit:cover; }
+.card .meta{ padding:.75rem .8rem; font-size:.95rem }
 .card .name{ font-weight:700 }
 .card .row{ display:flex; align-items:center; gap:.4rem; opacity:.85 }
 .user{ display:inline-flex; align-items:center; gap:.35rem; }
 .user svg{ width:14px; height:14px }
 .kms{ color:var(--km0-red) }
 
-.foot{
-  padding:1.2rem; text-align:center; opacity:.8;
-}
-
+/* FOOTER */
+.foot{ padding:1.2rem; text-align:center; opacity:.8; }
 .brand{ color:var(--km0-red); font-weight:700 }
 
+/* ANIMACIONES */
 @keyframes busFloat{
   0%,100%{ transform: translateY(0) }
   50%{ transform: translateY(-6px) }
