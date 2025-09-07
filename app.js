@@ -1,19 +1,23 @@
-// === Config (cámbia SOLO API_SECRET si no coincide) ===
+/**********************************************************
+ * KM0 – Front JS (Cloudinary + Apps Script vía FormData)
+ **********************************************************/
+
+// === Config (cambia SOLO si lo necesitas) ===
 const CLOUD_NAME      = "drhkixsov";
 const UPLOAD_PRESET   = "km0_public";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
-const API_SECRET      = "km0"; // Debe ser el mismo que en tu Apps Script
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
+const API_SECRET      = "km0"; // Debe coincidir con SECRET en Apps Script
 
-// 1) Abrir/cerrar el formulario
+/* ========== UI: abrir/cerrar formulario ========== */
 const joinSec = document.getElementById('join');
 document.getElementById('ctaLink')?.addEventListener('click', (e)=>{
   e.preventDefault();
   joinSec.classList.toggle('open');
   joinSec.setAttribute('aria-hidden', joinSec.classList.contains('open') ? 'false' : 'true');
-  if(joinSec.classList.contains('open')) joinSec.scrollIntoView({behavior:'smooth', block:'center'});
+  if (joinSec.classList.contains('open')) joinSec.scrollIntoView({ behavior:'smooth', block:'center' });
 });
 
-// 2) Vista previa de la imagen
+/* ========== Vista previa de imagen ========== */
 const fileInput = document.querySelector('input[name="foto"]');
 const preview   = document.getElementById('preview');
 fileInput?.addEventListener('change', ()=>{
@@ -21,25 +25,25 @@ fileInput?.addEventListener('change', ()=>{
   preview.src = f ? URL.createObjectURL(f) : '';
 });
 
-// 3) Subida a Cloudinary
+/* ========== Subida a Cloudinary ========== */
 async function uploadToCloudinary(file){
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', UPLOAD_PRESET);
 
-  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`; // ✅ corregido
-
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
   const res = await fetch(url, { method:'POST', body: fd });
   if(!res.ok){
     const txt = await res.text().catch(()=> '');
     throw new Error('Cloudinary: ' + (txt || res.status));
   }
+
   const j = await res.json();
   if(!j.secure_url) throw new Error('Cloudinary no devolvió URL');
   return j.secure_url;
 }
 
-// 4) Enviar a Apps Script
+/* ========== Enviar a Apps Script (FormData sin headers) ========== */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -48,14 +52,14 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 
   try{
     btn.disabled = true;
+
+    // 1) Sube la foto a Cloudinary
     msg.textContent = 'Subiendo foto...';
     const file = f.foto.files[0];
     if(!file) throw new Error('Selecciona una imagen');
-
-    // 4.1 Sube a Cloudinary
     const fotoUrl = await uploadToCloudinary(file);
 
-    // 4.2 Envía datos a tu Apps Script
+    // 2) Enviar datos a Apps Script con FormData (evita preflight CORS)
     msg.textContent = 'Guardando datos...';
     const payload = {
       secret: API_SECRET,
@@ -67,18 +71,23 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
       foto:   fotoUrl
     };
 
-    const r = await fetch(APPS_SCRIPT_URL, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const out = await r.json();
+    const fd2 = new FormData();
+    Object.entries(payload).forEach(([k,v]) => fd2.append(k, v));
+
+    // ¡OJO! Sin headers manuales. El navegador añade multipart/form-data.
+    const r = await fetch(APPS_SCRIPT_URL, { method:'POST', body: fd2 });
+
+    if(!r.ok){
+      const txt = await r.text().catch(()=> '');
+      throw new Error(`Apps Script ${r.status}. ${txt || ''}`.trim());
+    }
+    const out = await r.json().catch(()=> ({}));
     if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
 
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
     f.reset(); preview.src='';
 
-    // (Opcional) Cerrar el formulario al cabo de 2s
+    // (Opcional) cerrar el formulario al cabo de 2s
     setTimeout(()=> joinSec.classList.remove('open'), 2000);
 
   }catch(err){
@@ -88,33 +97,33 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     btn.disabled = false;
   }
 });
-/* ====== Países ====== */
-/* Lista ISO básica (selección de ~250 países/territorios) */
+
+/* ===================== Países ===================== */
 const COUNTRIES = [
-"Afganistán","Albania","Alemania","Andorra","Angola","Antigua y Barbuda","Arabia Saudí",
-"Argelia","Argentina","Armenia","Australia","Austria","Azerbaiyán","Bahamas","Bangladés",
-"Barbados","Baréin","Bélgica","Belice","Benín","Bielorrusia","Birmania (Myanmar)","Bolivia",
-"Bosnia y Herzegovina","Botsuana","Brasil","Brunéi","Bulgaria","Burkina Faso","Burundi",
-"Bután","Cabo Verde","Camboya","Camerún","Canadá","Catar","Chad","Chile","China","Chipre",
-"Colombia","Comoras","Congo","Corea del Norte","Corea del Sur","Costa de Marfil","Costa Rica",
-"Croacia","Cuba","Dinamarca","Dominica","Ecuador","Egipto","El Salvador","Emiratos Árabes Unidos",
-"Eritrea","Eslovaquia","Eslovenia","España","Estados Unidos","Estonia","Esuatini","Etiopía",
-"Filipinas","Finlandia","Fiyi","Francia","Gabón","Gambia","Georgia","Ghana","Granada","Grecia",
-"Guatemala","Guyana","Guinea","Guinea Ecuatorial","Guinea-Bisáu","Haití","Honduras","Hungría",
-"India","Indonesia","Irak","Irán","Irlanda","Islandia","Islas Marshall","Islas Salomón",
-"Israel","Italia","Jamaica","Japón","Jordania","Kazajistán","Kenia","Kirguistán","Kiribati",
-"Kuwait","Laos","Lesoto","Letonia","Líbano","Liberia","Libia","Liechtenstein","Lituania",
-"Luxemburgo","Madagascar","Malasia","Malaui","Maldivas","Malí","Malta","Marruecos","Mauricio",
-"Mauritania","México","Micronesia","Moldavia","Mónaco","Mongolia","Montenegro","Mozambique",
-"Namibia","Nauru","Nepal","Nicaragua","Níger","Nigeria","Noruega","Nueva Zelanda","Omán",
-"Países Bajos","Pakistán","Palaos","Panamá","Papúa Nueva Guinea","Paraguay","Perú","Polonia",
-"Portugal","Reino Unido","República Centroafricana","República Checa","República del Congo",
-"República Democrática del Congo","República Dominicana","Ruanda","Rumanía","Rusia","Samoa",
-"San Cristóbal y Nieves","San Marino","San Vicente y las Granadinas","Santa Lucía","Santo Tomé y Príncipe",
-"Senegal","Serbia","Seychelles","Sierra Leona","Singapur","Siria","Somalia","Sri Lanka","Sudáfrica",
-"Sudán","Sudán del Sur","Suecia","Suiza","Surinam","Tailandia","Tanzania","Tayikistán","Timor Oriental",
-"Togo","Tonga","Trinidad y Tobago","Túnez","Turkmenistán","Turquía","Tuvalu","Ucrania","Uganda",
-"Uruguay","Uzbekistán","Vanuatu","Venezuela","Vietnam","Yemen","Yibuti","Zambia","Zimbabue"
+  "Afganistán","Albania","Alemania","Andorra","Angola","Antigua y Barbuda","Arabia Saudí",
+  "Argelia","Argentina","Armenia","Australia","Austria","Azerbaiyán","Bahamas","Bangladés",
+  "Barbados","Baréin","Bélgica","Belice","Benín","Bielorrusia","Birmania (Myanmar)","Bolivia",
+  "Bosnia y Herzegovina","Botsuana","Brasil","Brunéi","Bulgaria","Burkina Faso","Burundi",
+  "Bután","Cabo Verde","Camboya","Camerún","Canadá","Catar","Chad","Chile","China","Chipre",
+  "Colombia","Comoras","Congo","Corea del Norte","Corea del Sur","Costa de Marfil","Costa Rica",
+  "Croacia","Cuba","Dinamarca","Dominica","Ecuador","Egipto","El Salvador","Emiratos Árabes Unidos",
+  "Eritrea","Eslovaquia","Eslovenia","España","Estados Unidos","Estonia","Esuatini","Etiopía",
+  "Filipinas","Finlandia","Fiyi","Francia","Gabón","Gambia","Georgia","Ghana","Granada","Grecia",
+  "Guatemala","Guyana","Guinea","Guinea Ecuatorial","Guinea-Bisáu","Haití","Honduras","Hungría",
+  "India","Indonesia","Irak","Irán","Irlanda","Islandia","Islas Marshall","Islas Salomón",
+  "Israel","Italia","Jamaica","Japón","Jordania","Kazajistán","Kenia","Kirguistán","Kiribati",
+  "Kuwait","Laos","Lesoto","Letonia","Líbano","Liberia","Libia","Liechtenstein","Lituania",
+  "Luxemburgo","Madagascar","Malasia","Malaui","Maldivas","Malí","Malta","Marruecos","Mauricio",
+  "Mauritania","México","Micronesia","Moldavia","Mónaco","Mongolia","Montenegro","Mozambique",
+  "Namibia","Nauru","Nepal","Nicaragua","Níger","Nigeria","Noruega","Nueva Zelanda","Omán",
+  "Países Bajos","Pakistán","Palaos","Panamá","Papúa Nueva Guinea","Paraguay","Perú","Polonia",
+  "Portugal","Reino Unido","República Centroafricana","República Checa","República del Congo",
+  "República Democrática del Congo","República Dominicana","Ruanda","Rumanía","Rusia","Samoa",
+  "San Cristóbal y Nieves","San Marino","San Vicente y las Granadinas","Santa Lucía","Santo Tomé y Príncipe",
+  "Senegal","Serbia","Seychelles","Sierra Leona","Singapur","Siria","Somalia","Sri Lanka","Sudáfrica",
+  "Sudán","Sudán del Sur","Suecia","Suiza","Surinam","Tailandia","Tanzania","Tayikistán","Timor Oriental",
+  "Togo","Tonga","Trinidad y Tobago","Túnez","Turkmenistán","Turquía","Tuvalu","Ucrania","Uganda",
+  "Uruguay","Uzbekistán","Vanuatu","Venezuela","Vietnam","Yemen","Yibuti","Zambia","Zimbabue"
 ];
 
 function populateCountries(){
@@ -127,13 +136,11 @@ function populateCountries(){
     frag.appendChild(opt);
   });
   sel.appendChild(frag);
-
-  // Si quieres que España salga seleccionada por defecto:
-  // sel.value = "España";
+  // sel.value = "España"; // si quieres por defecto
 }
 document.addEventListener('DOMContentLoaded', populateCountries);
 
-/* Opcional: cambia placeholder de ciudad según país */
+/* ===== Placeholder de ciudad según país ===== */
 const paisSel = document.getElementById('pais');
 const ciudadInput = document.getElementById('ciudad');
 paisSel?.addEventListener('change', ()=>{
@@ -175,7 +182,6 @@ const CITY_SUGGESTIONS = {
   ]
 };
 
-// Rellena el <datalist> según país
 function updateCitySuggestions(){
   const selPais = document.getElementById('pais');
   const dl = document.getElementById('ciudadSuggestions');
@@ -184,7 +190,7 @@ function updateCitySuggestions(){
 
   const pais = selPais.value;
   const list = CITY_SUGGESTIONS[pais] || [];
-  dl.innerHTML = ''; // limpia
+  dl.innerHTML = '';
 
   if(list.length){
     const frag = document.createDocumentFragment();
@@ -199,9 +205,5 @@ function updateCitySuggestions(){
     inputCiudad.placeholder = "Escribe tu ciudad";
   }
 }
-
-// engancha el cambio de país
 document.getElementById('pais')?.addEventListener('change', updateCitySuggestions);
-// y también al cargar por si hay valor por defecto
 document.addEventListener('DOMContentLoaded', updateCitySuggestions);
-
