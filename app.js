@@ -244,30 +244,26 @@ async function loadData(){
 
 function drawCounter(km){
   const el = document.getElementById('kmTotal');
-  if (!el) return;
+  if(!el) return;
+
   const target = Number(km) || 0;
-  const start  = Number(el.dataset.value || 0);
-  el.dataset.value = target;
-  animateCounter(el, start, target, 1200);  // 1.2s, easing suave
-}
+  const start  = Number((el.textContent || '0').replace(/\./g,'')) || 0;
+  const dur    = 900; // ms
+  const t0     = performance.now();
 
-function animateCounter(el, from, to, duration=1000){
-  const startTime = performance.now();
-  const ease = t => 1 - Math.pow(1 - t, 3);         // easeOutCubic
-
-  function frame(now){
-    const p = Math.min(1, (now - startTime)/duration);
-    const val = Math.round(from + (to - from) * ease(p));
+  function tick(now){
+    const p = Math.min(1, (now - t0) / dur);
+    const val = Math.round(start + (target - start) * p);
     el.textContent = new Intl.NumberFormat('es-ES').format(val);
-    if (p < 1) requestAnimationFrame(frame);
-    else {
-      el.classList.remove('bump');
-      // pequeño “golpecito” al terminar
-      void el.offsetWidth; // reflow para reiniciar anim
-      el.classList.add('bump');
-    }
+
+    // micro-bounce
+    const k = (1 - Math.abs(0.5 - p) * 2) * 2;
+    el.style.transform = `translateY(${ -1.5 * k }px)`;
+
+    if(p < 1) requestAnimationFrame(tick);
+    else el.style.transform = 'translateY(0)';
   }
-  requestAnimationFrame(frame);
+  requestAnimationFrame(tick);
 }
 
 // Tarjetas con SVGs (no emojis)

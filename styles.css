@@ -21,27 +21,33 @@
 *{ box-sizing: border-box }
 html,body{ height:100% }
 
+html, body{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body{
   margin:0;
   background:var(--km0-white);
   color:var(--km0-black);
   font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height:1.45;
-  font-weight: 400; /* sin negrita */
+  font-weight: 400;
 }
 
-/* Solo titulares/CTA/contador con Superlumina */
+/* Titulares/contador con Superlumina; resto en Cuerpo */
 .display{
   font-family: "Superlumina", system-ui, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .02em;
-  font-weight: 400; /* sin negrita */
+  letter-spacing: .055em;
+  font-weight: 400;
 }
 
 /* Forzamos la fuente de lectura en bloques con mucho texto */
 .howto, .steps li, .step-text,
 .gallery, .cards, .card, .card .meta,
-.counter .label, .foot{
+.counter .label, .foot,
+.join, .join *{
   font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-weight: 400;
 }
@@ -77,7 +83,7 @@ body{
 }
 .counter .value{
   font-family:"Superlumina", system-ui, sans-serif;
-  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-size: clamp(3rem, 8vw, 5.6rem);
   font-weight: 400;
   text-align:center;
   padding:.25em .5em;
@@ -85,6 +91,7 @@ body{
   color:#fff;
   border-radius:.6rem;
   box-shadow: 0 6px 0 rgba(0,0,0,.15);
+  will-change: transform; /* para la animación suave del número */
 }
 
 /* CÓMO PARTICIPAR */
@@ -92,57 +99,103 @@ body{
 .howto-inner{ max-width:1000px; margin:0 auto; text-align:center; }
 .steps{
   list-style:none; padding:0; margin:0 0 1.5rem 0;
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:1.25rem;
 }
 .steps li{
-  background:#ffffff; color:#000; border-radius:.9rem; padding:1rem;
-  display:flex; align-items:center; gap:.75rem; justify-content:center;
+  background:#ffffff; color:#000; border-radius:.9rem; padding:1.25rem 1.15rem;
+  display:flex; align-items:center; gap:1rem; justify-content:center;
 }
-.step-icon{ font-size:1.4rem }
+.step-icon{ font-size:2rem; line-height:1; }
 
-/* BOTÓN CTA */
+/* CTA (unificado) */
 .cta{
   display:inline-block;
-  background:#fff; color:#000; text-decoration:none;
-  padding:.9rem 1.2rem; border-radius:999px;
-  box-shadow: 0 6px 0 rgba(0,0,0,.2);
-  transition: transform .15s ease, box-shadow .15s ease;
-  font-family:"Superlumina", system-ui, sans-serif;
-  text-transform:uppercase; letter-spacing:.04em; font-weight:600;
+  background:#fff;
+  color:#111;
+  text-decoration:none;
+  padding:1rem 1.6rem;
+  border-radius:999px;
+  border:2px solid #111;
+  box-shadow: 0 6px 0 rgba(0,0,0,.20);
+  transition: transform .12s ease, box-shadow .12s ease;
+  font-family:"Cuerpo", system-ui, sans-serif;  /* legible */
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight:500;
   text-align:center;
 }
-.cta:hover{ transform: translateY(-2px) }
+.cta:hover{ transform: translateY(-2px); }
+.cta:disabled{ opacity:.6; cursor:not-allowed; }
+
+/* Si quieres una CTA “de estilo titular” para casos concretos */
 .cta.display{
+  font-family:"Superlumina", system-ui, sans-serif;
   font-size: clamp(1.2rem, 2.8vw, 1.5rem);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  padding: 1rem 1.6rem;
+  letter-spacing:.04em;
 }
 
 /* GALERÍA */
 .gallery{ padding: clamp(2rem, 4vw, 4rem) 1rem; }
 .gallery-inner{ max-width:1200px; margin:0 auto }
-.gallery h2{ margin:0 0 1rem 0; font-size: clamp(1.8rem, 4.2vw, 2.6rem) }
+.gallery h2{ margin:0 0 1rem 0; font-size: clamp(2rem, 5vw, 3rem) }
 
 .cards{
   display:grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 14px;
+  gap: 18px;
 }
 @media (max-width: 1100px){ .cards{ grid-template-columns: repeat(4, 1fr)}}
-@media (max-width: 700px){ .cards{ grid-template-columns: repeat(2, 1fr)}}
+@media (max-width: 900px){  .cards{ grid-template-columns: repeat(3, 1fr)} }
+@media (max-width: 700px){  .cards{ grid-template-columns: repeat(2, 1fr)} }
+@media (max-width: 420px){  .cards{ grid-template-columns: 1fr } }
 
 .card{
   background:#fff; border:1px solid #e9e9e9; border-radius:14px; overflow:hidden;
   display:flex; flex-direction:column;
 }
-.card .ph{ aspect-ratio:1/1; background:#f0f0f0; display:block; width:100%; object-fit:cover; }
-.card .meta{ padding:.75rem .8rem; font-size:.95rem }
-.card .name{ font-weight:700 }
-.card .row{ display:flex; align-items:center; gap:.4rem; opacity:.85 }
-.user{ display:inline-flex; align-items:center; gap:.35rem; }
-.user svg{ width:14px; height:14px }
-.kms{ color:var(--km0-red) }
+.card .ph{
+  width:100%;
+  aspect-ratio:1/1;
+  background:linear-gradient(180deg,#efefef 0%, #f7f7f7 100%);
+  border-bottom:1px solid #f0f0f0;
+  object-fit:cover;
+}
+.card .meta{
+  display:grid;
+  gap:.45rem;
+  padding:.8rem .9rem .95rem;
+  font-size:.98rem;
+}
+
+/* NOMBRE mucho más legible */
+.card .name{
+  font-size: 1rem;
+  line-height: 1.15;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: .01em;
+  margin-bottom:.25rem;
+}
+.card .row{
+  display:flex; align-items:center; gap:.45rem;
+  color:#333; opacity:.9; font-size:.93rem;
+}
+.row svg{
+  width:16px; height:16px; flex:0 0 16px;
+  fill:#333; opacity:.9;
+}
+.user svg{ width:14px; height:14px; opacity:.95; }
+
+.kms{ color:var(--km0-red); font-weight:600; }
+/* “+ km” como símbolo real (no SVG) */
+.row.kms::before{
+  content:"+";
+  display:inline-block;
+  margin-right:.35rem;
+  transform: translateY(-1px);
+  font-weight:700;
+}
 
 /* FOOTER */
 .foot{ padding:1.2rem; text-align:center; opacity:.8; }
@@ -152,66 +205,11 @@ body{
 @keyframes busFloat{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
 @keyframes shadowPulse{ 0%,100%{ transform: translateY(8px) scaleX(1) } 50%{ transform: translateY(8px) scaleX(1.05) } }
 
-/* tamaños display */
-.counter .value{ font-size: clamp(3rem, 8vw, 5.6rem); }
-.gallery h2{ font-size: clamp(2rem, 5vw, 3rem); }
-.cta{ font-size: clamp(1rem, 2.4vw, 1.25rem); padding: 1rem 1.4rem; }
-
-/* responsive de pasos y cards */
-@media (max-width: 900px){
-  .steps{ grid-template-columns: 1fr; }
-  .cards{ grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 640px){
-  .cards{ grid-template-columns: repeat(2, 1fr); }
-  .bus-wrap{ width:min(560px, 95vw); }
-}
-@media (max-width: 420px){
-  .cards{ grid-template-columns: 1fr; }
-  .cta{ width: 100%; }
-}
-/* --- FIX ICONOS Y LAYOUT EN CARDS --- */
-.card { background:#fff; border:1px solid #eee; border-radius:14px; overflow:hidden; }
-.card .ph{
-  width:100%;
-  aspect-ratio:1/1;
-  background:linear-gradient(180deg,#efefef 0%, #f7f7f7 100%);
-  border-bottom:1px solid #f0f0f0;
-}
-.card .meta{
-  display:grid;
-  gap:.45rem;
-  padding:.8rem .9rem .95rem;
-  font-size:.98rem;
-}
-.card .name{ font-weight:700; margin-bottom:.25rem; }
-
-.row{
-  display:flex; align-items:center; gap:.45rem;
-  color:#333; opacity:.9;
-}
-.row svg{
-  width:16px; height:16px; flex:0 0 16px;
-  fill:#333; opacity:.9;
-}
-.user svg{ width:14px; height:14px; opacity:.95; }
-
-.kms{ color:var(--km0-red); font-weight:600; }
-
-/* Un pelín más “card-like” para la primera fila */
-.cards { gap: 18px; }
-
-/* Responsive ajustes suaves */
-@media (max-width: 900px){
-  .card .meta{ font-size: .96rem; }
-}
-@media (max-width: 640px){
-  .card .meta{ font-size: .95rem; }
-}
-/* --- JOIN FORM --- */
+/* JOIN FORM */
 .join{
-  display:none; background:#fff; border:1px solid #eee; border-radius:16px;
-  padding:1.2rem; margin:1.5rem auto; max-width:960px;
+  display:none; background:#fff; border:1px solid #eee; border-radius:18px;
+  padding: clamp(1rem, 3vw, 1.2rem);
+  margin:1.5rem auto; max-width:960px;
   box-shadow:0 10px 24px rgba(0,0,0,.06);
 }
 .join.open{ display:block; animation:drop .25s ease-out }
@@ -224,24 +222,17 @@ body{
 .join label{ display:flex; flex-direction:column; gap:6px; font-weight:600 }
 .join input, .join select{
   font:inherit; padding:.7rem .8rem; border:1px solid #ddd; border-radius:10px; background:#fff;
+  width: 100%; max-width: 100%; -webkit-appearance: none; appearance: none;
 }
 .join .actions{ display:flex; align-items:center; gap:12px; margin-top:10px }
 .join .hint{ font-size:.9rem; opacity:.75 }
 .preview{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; background:#f3f3f3 }
 #joinMsg{ min-height:1.2em }
 
-/* --- Ajustes de color del formulario --- */
-.join, .join * {
-  color: #111;            /* texto negro */
-}
+/* Placeholders más suaves */
 .join input::placeholder,
-.join select:invalid {     /* pistas/placeholder un pelín más suaves */
-  color: #666;
-}
-.join input, .join select {
-  color: #111;
-  background:#fff;
-}
+.join select:invalid { color: #666; }
+
 /* Ayudita visual para el datalist */
 .join input[list] {
   background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0,rgba(0,0,0,0) calc(100% - 1.8rem), rgba(0,0,0,.04) calc(100% - 1.8rem));
@@ -249,58 +240,7 @@ body{
   background-size: 100% 100%;
 }
 
-/* Titular del formulario al tamaño de "Pasajeros del Bus KM0" o un poco más */
-.join h3.display{
-  font-size: clamp(1.8rem, 4.2vw, 2.6rem);  /* igual que el h2.display de la galería */
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  margin-bottom: .8rem;
-  text-align: center;
-}
-
-/* ===== Fix mobile form overflow ===== */
-.join{ 
-  padding: clamp(1rem, 3vw, 1.2rem);
-  border-radius: 18px;
-}
-
-/* que los hijos del grid puedan encogerse */
-.join .grid > *{ min-width: 0; }
-
-/* inputs/selects ocupan 100% y no se salen */
-.join input,
-.join select{
-  width: 100%;
-  max-width: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* el input de archivo en móviles suele desbordar; lo recortamos */
-.join input[type="file"]{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* vista previa siempre dentro del ancho */
-.preview{
-  max-width: 100%;
-  width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-/* grid en móvil: una sola columna + separaciones cómodas */
-@media (max-width: 600px){
-  .join .grid{ 
-    grid-template-columns: 1fr; 
-    gap: 14px;
-  }
-}
-
-/* Título del formulario (ya estaba, lo reforzamos) */
+/* Titular del formulario tamaño h2 de la galería */
 .join h3.display{
   font-size: clamp(1.8rem, 4.2vw, 2.6rem);
   text-transform: uppercase;
@@ -309,89 +249,7 @@ body{
   margin: .2rem 0 1rem 0;
 }
 
-/* Botón grande estilo “pill”, texto negro y en mayúsculas */
-.cta{
-  display:inline-block;
-  background:#fff;
-  color:#111;
-  text-decoration:none;
-  padding:1rem 1.6rem;
-  border-radius:999px;
-  font-weight:800;
-  box-shadow: 0 6px 0 rgba(0,0,0,.20);
-  transition: transform .12s ease, box-shadow .12s ease;
-  border: 2px solid #111;            /* contorno para legibilidad */
+/* Responsivo */
+@media (max-width: 640px){
+  .bus-wrap{ width:min(560px, 95vw); }
 }
-.cta.display{
-  font-family:"Superlumina", system-ui, sans-serif;
-  font-size: clamp(1.2rem, 2.8vw, 1.5rem);
-  text-transform: uppercase;
-  letter-spacing:.04em;
-}
-.cta:hover{ transform: translateY(-2px); }
-.cta:disabled{ opacity:.6; cursor:not-allowed; }
-
-/* Botones dentro del formulario alineados y con aire */
-.join .actions{
-  display:flex; align-items:center; gap:12px; margin-top:10px;
-}
-
-/* Mensajes de estado del envío */
-#joinMsg{ min-height:1.2em; font-size:.95rem; }
-
-.counter .value.bump{ animation:bump .45s ease; }
-@keyframes bump{
-  0%{ transform:translateY(0) scale(1); }
-  35%{ transform:translateY(-2px) scale(1.04); }
-  100%{ transform:translateY(0) scale(1); }
-}
-
-.kms .plus{
-  display:inline-block;
-  font-weight:800;
-  line-height:1;
-  margin-right:.25rem;
-  font-size:1.05em;
-}
-
-/* Accesibilidad: oculto visual pero disponible a lectores */
-.sr-only{
-  position:absolute!important; width:1px;height:1px;padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
-}
-
-/* Infografía */
-.howto-graphic{
-  max-width:1100px; margin:0 auto; text-align:center;
-  display:grid; gap:2rem;
-}
-
-.howto-graphic .step{
-  color:#fff; background:transparent; border-radius:14px;
-  display:grid; justify-items:center; gap:.5rem; padding:1rem .5rem;
-}
-
-.howto-graphic .icon{
-  color:#fff; opacity:.95; width:90px; height:90px;
-}
-.howto-graphic .icon svg{ width:100%; height:100%; }
-
-.step-title{ font-size: clamp(1.05rem, 2.2vw, 1.4rem); margin:.25rem 0 0 0; }
-.step-desc { font-size:.95rem; opacity:.9; margin:0; }
-
-.howto-graphic .cta{
-  margin: .5rem auto 0;
-  min-width: 260px; font-size: clamp(1rem, 2.2vw, 1.1rem);
-}
-
-/* Disposición en columnas */
-@media (min-width: 800px){
-  .howto-graphic{
-    grid-template-columns: repeat(3, 1fr);
-    align-items: start;
-  }
-  .howto-graphic .cta{
-    grid-column: 1 / -1;
-  }
-}
-
