@@ -84,3 +84,120 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     btn.disabled = false;
   }
 });
+/* ====== Países ====== */
+/* Lista ISO básica (selección de ~250 países/territorios) */
+const COUNTRIES = [
+"Afganistán","Albania","Alemania","Andorra","Angola","Antigua y Barbuda","Arabia Saudí",
+"Argelia","Argentina","Armenia","Australia","Austria","Azerbaiyán","Bahamas","Bangladés",
+"Barbados","Baréin","Bélgica","Belice","Benín","Bielorrusia","Birmania (Myanmar)","Bolivia",
+"Bosnia y Herzegovina","Botsuana","Brasil","Brunéi","Bulgaria","Burkina Faso","Burundi",
+"Bután","Cabo Verde","Camboya","Camerún","Canadá","Catar","Chad","Chile","China","Chipre",
+"Colombia","Comoras","Congo","Corea del Norte","Corea del Sur","Costa de Marfil","Costa Rica",
+"Croacia","Cuba","Dinamarca","Dominica","Ecuador","Egipto","El Salvador","Emiratos Árabes Unidos",
+"Eritrea","Eslovaquia","Eslovenia","España","Estados Unidos","Estonia","Esuatini","Etiopía",
+"Filipinas","Finlandia","Fiyi","Francia","Gabón","Gambia","Georgia","Ghana","Granada","Grecia",
+"Guatemala","Guyana","Guinea","Guinea Ecuatorial","Guinea-Bisáu","Haití","Honduras","Hungría",
+"India","Indonesia","Irak","Irán","Irlanda","Islandia","Islas Marshall","Islas Salomón",
+"Israel","Italia","Jamaica","Japón","Jordania","Kazajistán","Kenia","Kirguistán","Kiribati",
+"Kuwait","Laos","Lesoto","Letonia","Líbano","Liberia","Libia","Liechtenstein","Lituania",
+"Luxemburgo","Madagascar","Malasia","Malaui","Maldivas","Malí","Malta","Marruecos","Mauricio",
+"Mauritania","México","Micronesia","Moldavia","Mónaco","Mongolia","Montenegro","Mozambique",
+"Namibia","Nauru","Nepal","Nicaragua","Níger","Nigeria","Noruega","Nueva Zelanda","Omán",
+"Países Bajos","Pakistán","Palaos","Panamá","Papúa Nueva Guinea","Paraguay","Perú","Polonia",
+"Portugal","Reino Unido","República Centroafricana","República Checa","República del Congo",
+"República Democrática del Congo","República Dominicana","Ruanda","Rumanía","Rusia","Samoa",
+"San Cristóbal y Nieves","San Marino","San Vicente y las Granadinas","Santa Lucía","Santo Tomé y Príncipe",
+"Senegal","Serbia","Seychelles","Sierra Leona","Singapur","Siria","Somalia","Sri Lanka","Sudáfrica",
+"Sudán","Sudán del Sur","Suecia","Suiza","Surinam","Tailandia","Tanzania","Tayikistán","Timor Oriental",
+"Togo","Tonga","Trinidad y Tobago","Túnez","Turkmenistán","Turquía","Tuvalu","Ucrania","Uganda",
+"Uruguay","Uzbekistán","Vanuatu","Venezuela","Vietnam","Yemen","Yibuti","Zambia","Zimbabue"
+];
+
+function populateCountries(){
+  const sel = document.getElementById('pais');
+  if(!sel) return;
+  const frag = document.createDocumentFragment();
+  COUNTRIES.forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    frag.appendChild(opt);
+  });
+  sel.appendChild(frag);
+
+  // Si quieres que España salga seleccionada por defecto:
+  // sel.value = "España";
+}
+document.addEventListener('DOMContentLoaded', populateCountries);
+
+/* Opcional: cambia placeholder de ciudad según país */
+const paisSel = document.getElementById('pais');
+const ciudadInput = document.getElementById('ciudad');
+paisSel?.addEventListener('change', ()=>{
+  const p = paisSel.value;
+  if(ciudadInput){
+    ciudadInput.placeholder = (p === "España")
+      ? "Madrid, Sevilla, Barcelona…"
+      : "Escribe tu ciudad";
+  }
+});
+
+/* ====== Sugerencias de ciudades por país ====== */
+const CITY_SUGGESTIONS = {
+  "España": [
+    "Madrid","Barcelona","Valencia","Sevilla","Zaragoza","Málaga","Murcia","Palma",
+    "Las Palmas de Gran Canaria","Bilbao","Alicante","Córdoba","Valladolid","Vigo",
+    "Gijón","Hospitalet de Llobregat","A Coruña","Vitoria-Gasteiz","Granada","Elche",
+    "Oviedo","Santa Cruz de Tenerife","Badalona","Cartagena","Terrassa","Jerez de la Frontera",
+    "Sabadell","Móstoles","Alcalá de Henares","Pamplona","Fuenlabrada","Almería","Leganés",
+    "Donostia / San Sebastián","Burgos","Santander","Castellón de la Plana","Getafe","Albacete"
+  ],
+  "México": [
+    "Ciudad de México","Guadalajara","Monterrey","Puebla","Tijuana","León","Querétaro","Toluca",
+    "Mérida","San Luis Potosí","Aguascalientes","Hermosillo","Chihuahua","Saltillo","Morelia",
+    "Culiacán","Cancún","Veracruz","Villahermosa","Durango","Acapulco","Torreón","Xalapa","Tepic"
+  ],
+  "Argentina": [
+    "Buenos Aires","Córdoba","Rosario","Mendoza","La Plata","Mar del Plata","San Miguel de Tucumán",
+    "Salta","Santa Fe","Corrientes","Bahía Blanca","Resistencia","Posadas","San Salvador de Jujuy",
+    "Neuquén","Santiago del Estero","Paraná"
+  ],
+  "Chile": [
+    "Santiago","Valparaíso","Viña del Mar","Concepción","La Serena","Antofagasta","Temuco",
+    "Rancagua","Iquique","Puerto Montt","Talca","Arica","Copiapó","Osorno","Chillán"
+  ],
+  "Colombia": [
+    "Bogotá","Medellín","Cali","Barranquilla","Cartagena","Cúcuta","Bucaramanga","Soacha",
+    "Ibagué","Soledad","Santa Marta","Villavicencio","Pereira","Bello","Valledupar","Montería"
+  ]
+};
+
+// Rellena el <datalist> según país
+function updateCitySuggestions(){
+  const selPais = document.getElementById('pais');
+  const dl = document.getElementById('ciudadSuggestions');
+  const inputCiudad = document.getElementById('ciudad');
+  if(!selPais || !dl) return;
+
+  const pais = selPais.value;
+  const list = CITY_SUGGESTIONS[pais] || [];
+  dl.innerHTML = ''; // limpia
+
+  if(list.length){
+    const frag = document.createDocumentFragment();
+    list.forEach(c=>{
+      const opt = document.createElement('option');
+      opt.value = c;
+      frag.appendChild(opt);
+    });
+    dl.appendChild(frag);
+    inputCiudad.placeholder = "Empieza a escribir o elige de la lista…";
+  }else{
+    inputCiudad.placeholder = "Escribe tu ciudad";
+  }
+}
+
+// engancha el cambio de país
+document.getElementById('pais')?.addEventListener('change', updateCitySuggestions);
+// y también al cargar por si hay valor por defecto
+document.addEventListener('DOMContentLoaded', updateCitySuggestions);
+

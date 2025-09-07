@@ -72,6 +72,7 @@
           <option value="X (Twitter)">X (Twitter)</option>
           <option value="TikTok">TikTok</option>
           <option value="Threads">Threads</option>
+<option value="Facebook">Facebook</option>
         </select>
       </label>
 
@@ -80,13 +81,17 @@
                title="Solo letras, números, _ y . (2–30)" required>
       </label>
 
-      <label>Ciudad
-        <input name="ciudad" required>
-      </label>
-
       <label>País
-        <input name="pais" required>
-      </label>
+  <select name="pais" id="pais" required>
+    <option value="" selected disabled>Selecciona un país…</option>
+  </select>
+</label>
+
+<label>Ciudad
+  <input name="ciudad" id="ciudad" list="ciudadSuggestions" required placeholder="Escribe tu ciudad">
+  <datalist id="ciudadSuggestions"></datalist>
+</label>
+
 
       <label>Foto con el disco
         <input type="file" name="foto" accept="image/*" required>
