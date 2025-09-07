@@ -5,7 +5,7 @@
 // === Config (cambia SOLO si lo necesitas) ===
 const CLOUD_NAME      = "drhkixsov";
 const UPLOAD_PRESET   = "km0_public";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0"; // Debe coincidir con SECRET en Apps Script
 
 /* ========== UI: abrir/cerrar formulario ========== */
