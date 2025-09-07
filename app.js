@@ -26,13 +26,17 @@ async function uploadToCloudinary(file){
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', UPLOAD_PRESET);
-  // Opcional: tu preset ya guarda en la carpeta km0/, no hace falta pasar 'folder'
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
-    method:'POST', body: fd
-  });
-  if(!res.ok) throw new Error('Error subiendo la imagen');
+
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`; // ✅ corregido
+
+  const res = await fetch(url, { method:'POST', body: fd });
+  if(!res.ok){
+    const txt = await res.text().catch(()=> '');
+    throw new Error('Cloudinary: ' + (txt || res.status));
+  }
   const j = await res.json();
-  return j.secure_url; // URL pública
+  if(!j.secure_url) throw new Error('Cloudinary no devolvió URL');
+  return j.secure_url;
 }
 
 // 4) Enviar a Apps Script

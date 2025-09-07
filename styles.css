@@ -108,10 +108,16 @@ body{
   box-shadow: 0 6px 0 rgba(0,0,0,.2);
   transition: transform .15s ease, box-shadow .15s ease;
   font-family:"Superlumina", system-ui, sans-serif;
-  text-transform:uppercase; letter-spacing:.02em; font-weight:400;
+  text-transform:uppercase; letter-spacing:.04em; font-weight:600;
   text-align:center;
 }
 .cta:hover{ transform: translateY(-2px) }
+.cta.display{
+  font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 1rem 1.6rem;
+}
 
 /* GALERÍA */
 .gallery{ padding: clamp(2rem, 4vw, 4rem) 1rem; }
@@ -243,3 +249,11 @@ body{
   background-size: 100% 100%;
 }
 
+/* Titular del formulario al tamaño de "Pasajeros del Bus KM0" o un poco más */
+.join h3.display{
+  font-size: clamp(1.8rem, 4.2vw, 2.6rem);  /* igual que el h2.display de la galería */
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: .8rem;
+  text-align: center;
+}
