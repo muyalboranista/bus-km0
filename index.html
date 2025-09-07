@@ -8,6 +8,29 @@
   <link rel="preload" href="cuerpo.woff2" as="font" type="font/woff2" crossorigin>
   <!-- cache-busting -->
   <link rel="stylesheet" href="styles.css?v=3" />
+<!-- Sprite de iconos (oculto) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <!-- Carrito -->
+  <symbol id="i-cart" viewBox="0 0 24 24">
+    <path d="M3 6h3l2 10h9l3-8H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="10" cy="18" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="17" cy="18" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Cámara -->
+  <symbol id="i-camera" viewBox="0 0 24 24">
+    <rect x="3" y="7" width="18" height="12" rx="2.2" ry="2.2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M8 7l1.6-2h4.8L16 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+
+  <!-- Subir / Flecha -->
+  <symbol id="i-upload" viewBox="0 0 24 24">
+    <path d="M12 20V7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M7.5 11.5L12 7l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+</svg>
 </head>
 <body>
   <header class="hero">
@@ -50,33 +73,33 @@
   <!-- CÓMO PARTICIPAR -->
 <section class="howto">
   <div class="howto-inner">
-    <div class="howto-graphic">
-      <div class="step">
-        <div class="icon">
-          <!-- tu SVG del carrito -->
-        </div>
-        <h3 class="step-title">Compra el disco físico</h3>
-        <p class="step-desc">Hazte con el álbum en su edición física.</p>
-      </div>
+    <ul class="steps">
+      <li>
+        <svg class="step-icon" aria-hidden="true">
+          <use href="#i-cart"></use>
+        </svg>
+        <h3>Compra el disco físico</h3>
+        <p>Hazte con el álbum en su edición física.</p>
+      </li>
 
-      <div class="step">
-        <div class="icon">
-          <!-- tu SVG de la cámara -->
-        </div>
-        <h3 class="step-title">Cuando te llegue, hazte una foto con él</h3>
-        <p class="step-desc">Súbenos tu foto con el disco.</p>
-      </div>
+      <li>
+        <svg class="step-icon" aria-hidden="true">
+          <use href="#i-camera"></use>
+        </svg>
+        <h3>Cuando te llegue, hazte una foto con él</h3>
+        <p>Súbenos tu foto con el disco.</p>
+      </li>
 
-      <div class="step">
-        <div class="icon">
-          <!-- tu SVG de la flecha/subida -->
-        </div>
-        <h3 class="step-title">Cuéntanos desde dónde te subes</h3>
-        <p class="step-desc">Indica ciudad y país.</p>
-      </div>
+      <li>
+        <svg class="step-icon" aria-hidden="true">
+          <use href="#i-upload"></use>
+        </svg>
+        <h3>Cuéntanos desde dónde te subes</h3>
+        <p>Indica ciudad y país.</p>
+      </li>
+    </ul>
 
-      <a href="#join" class="cta">SUBIR AL AUTOBÚS</a>
-    </div>
+    <a href="#join" class="cta display">SÚBETE AL AUTOBÚS</a>
   </div>
 
 <section id="join" class="join" aria-hidden="true">
