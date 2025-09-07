@@ -56,8 +56,57 @@
         <li><div class="step-icon">📍</div><div class="step-text">Súbela indicando <strong>Ciudad</strong> y <strong>País</strong>.</div></li>
       </ol>
       <a class="cta display" id="ctaLink" href="#" target="_blank" rel="noopener">Subirme al autobús</a>
+
+<section id="join" class="join" aria-hidden="true">
+  <h3 class="display" style="margin:0 0 .5rem 0">Súbete al bus</h3>
+
+  <form id="joinForm" autocomplete="on">
+    <div class="grid">
+      <label>Nombre
+        <input name="nombre" required maxlength="60">
+      </label>
+
+      <label>Red social
+        <select name="red_social" required>
+          <option value="Instagram">Instagram</option>
+          <option value="X (Twitter)">X (Twitter)</option>
+          <option value="TikTok">TikTok</option>
+          <option value="Threads">Threads</option>
+        </select>
+      </label>
+
+      <label>Usuario (sin @)
+        <input name="usuario" pattern="^[A-Za-z0-9_.]{2,30}$"
+               title="Solo letras, números, _ y . (2–30)" required>
+      </label>
+
+      <label>Ciudad
+        <input name="ciudad" required>
+      </label>
+
+      <label>País
+        <input name="pais" required>
+      </label>
+
+      <label>Foto con el disco
+        <input type="file" name="foto" accept="image/*" required>
+      </label>
+
+      <div>
+        <img id="preview" class="preview" alt="Vista previa">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="cta display" type="submit">Enviar</button>
+      <span id="joinMsg" class="hint"></span>
+    </div>
+  </form>
+</section>
+
     </div>
   </section>
+
 
   <!-- GALERÍA -->
   <main class="gallery">
