@@ -164,3 +164,41 @@ body{
   .cards{ grid-template-columns: 1fr; }
   .cta{ width: 100%; }
 }
+/* --- FIX ICONOS Y LAYOUT EN CARDS --- */
+.card { background:#fff; border:1px solid #eee; border-radius:14px; overflow:hidden; }
+.card .ph{
+  width:100%;
+  aspect-ratio:1/1;
+  background:linear-gradient(180deg,#efefef 0%, #f7f7f7 100%);
+  border-bottom:1px solid #f0f0f0;
+}
+.card .meta{
+  display:grid;
+  gap:.45rem;
+  padding:.8rem .9rem .95rem;
+  font-size:.98rem;
+}
+.card .name{ font-weight:700; margin-bottom:.25rem; }
+
+.row{
+  display:flex; align-items:center; gap:.45rem;
+  color:#333; opacity:.9;
+}
+.row svg{
+  width:16px; height:16px; flex:0 0 16px;
+  fill:#333; opacity:.9;
+}
+.user svg{ width:14px; height:14px; opacity:.95; }
+
+.kms{ color:var(--km0-red); font-weight:600; }
+
+/* Un pelín más “card-like” para la primera fila */
+.cards { gap: 18px; }
+
+/* Responsive ajustes suaves */
+@media (max-width: 900px){
+  .card .meta{ font-size: .96rem; }
+}
+@media (max-width: 640px){
+  .card .meta{ font-size: .95rem; }
+}
