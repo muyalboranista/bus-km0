@@ -145,3 +145,22 @@ body{
 /* ANIMACIONES */
 @keyframes busFloat{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
 @keyframes shadowPulse{ 0%,100%{ transform: translateY(8px) scaleX(1) } 50%{ transform: translateY(8px) scaleX(1.05) } }
+
+/* tamaños display */
+.counter .value{ font-size: clamp(3rem, 8vw, 5.6rem); }
+.gallery h2{ font-size: clamp(2rem, 5vw, 3rem); }
+.cta{ font-size: clamp(1rem, 2.4vw, 1.25rem); padding: 1rem 1.4rem; }
+
+/* responsive de pasos y cards */
+@media (max-width: 900px){
+  .steps{ grid-template-columns: 1fr; }
+  .cards{ grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px){
+  .cards{ grid-template-columns: repeat(2, 1fr); }
+  .bus-wrap{ width:min(560px, 95vw); }
+}
+@media (max-width: 420px){
+  .cards{ grid-template-columns: 1fr; }
+  .cta{ width: 100%; }
+}
