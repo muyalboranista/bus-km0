@@ -257,3 +257,84 @@ body{
   margin-bottom: .8rem;
   text-align: center;
 }
+
+/* ===== Fix mobile form overflow ===== */
+.join{ 
+  padding: clamp(1rem, 3vw, 1.2rem);
+  border-radius: 18px;
+}
+
+/* que los hijos del grid puedan encogerse */
+.join .grid > *{ min-width: 0; }
+
+/* inputs/selects ocupan 100% y no se salen */
+.join input,
+.join select{
+  width: 100%;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* el input de archivo en móviles suele desbordar; lo recortamos */
+.join input[type="file"]{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* vista previa siempre dentro del ancho */
+.preview{
+  max-width: 100%;
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* grid en móvil: una sola columna + separaciones cómodas */
+@media (max-width: 600px){
+  .join .grid{ 
+    grid-template-columns: 1fr; 
+    gap: 14px;
+  }
+}
+
+/* Título del formulario (ya estaba, lo reforzamos) */
+.join h3.display{
+  font-size: clamp(1.8rem, 4.2vw, 2.6rem);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  text-align: center;
+  margin: .2rem 0 1rem 0;
+}
+
+/* Botón grande estilo “pill”, texto negro y en mayúsculas */
+.cta{
+  display:inline-block;
+  background:#fff;
+  color:#111;
+  text-decoration:none;
+  padding:1rem 1.6rem;
+  border-radius:999px;
+  font-weight:800;
+  box-shadow: 0 6px 0 rgba(0,0,0,.20);
+  transition: transform .12s ease, box-shadow .12s ease;
+  border: 2px solid #111;            /* contorno para legibilidad */
+}
+.cta.display{
+  font-family:"Superlumina", system-ui, sans-serif;
+  font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing:.04em;
+}
+.cta:hover{ transform: translateY(-2px); }
+.cta:disabled{ opacity:.6; cursor:not-allowed; }
+
+/* Botones dentro del formulario alineados y con aire */
+.join .actions{
+  display:flex; align-items:center; gap:12px; margin-top:10px;
+}
+
+/* Mensajes de estado del envío */
+#joinMsg{ min-height:1.2em; font-size:.95rem; }
