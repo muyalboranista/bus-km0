@@ -37,7 +37,6 @@ async function uploadToCloudinary(file){
     const txt = await res.text().catch(()=> '');
     throw new Error('Cloudinary: ' + (txt || res.status));
   }
-
   const j = await res.json();
   if(!j.secure_url) throw new Error('Cloudinary no devolvió URL');
   return j.secure_url;
@@ -74,7 +73,6 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     const fd2 = new FormData();
     Object.entries(payload).forEach(([k,v]) => fd2.append(k, v));
 
-    // ¡OJO! Sin headers manuales. El navegador añade multipart/form-data.
     const r = await fetch(APPS_SCRIPT_URL, { method:'POST', body: fd2 });
 
     if(!r.ok){
@@ -216,7 +214,7 @@ function svg(name){
     case 'x':     return `<svg ${base} fill="currentColor"><path d="M3 3h4.5l6 7.5L18 3h3l-7 9 7 9h-4.5l-6-7.5L6 21H3l7-9-7-9z"/></svg>`;
     case 'tiktok':return `<svg ${base} fill="currentColor"><path d="M14 2c1.1 2.3 2.9 3.6 5 3.8V9c-1.8-.1-3.4-.7-5-1.8V15a7 7 0 1 1-7-7h1v3h-1a4 4 0 1 0 4 4V2h3z"/></svg>`;
     case 'pin':   return `<svg ${base} fill="currentColor"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13s-7-8-7-13a7 7 0 0 1 7-7zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>`;
-    case 'plus':  return `<svg ${base} fill="currentColor"><path d="M11 3h2v8h8v2h-8v8h-2v-8H3v-2h8z"/></svg>`;
+    case 'plus':  return `<svg ${base} fill="currentColor"><path d="M11 3h2v8h8v2h-2v-8H3v-2h8z"/></svg>`;
     case 'cal':   return `<svg ${base} fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3v16H4V4h3V2zm12 8H5v8h14v-8z"/></svg>`;
     default:      return `<svg ${base} fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>`;
   }
@@ -231,15 +229,17 @@ function iconFor(red=''){
 
 // === CARGA DE DATOS Y PINTADO ===
 async function loadData(){
-  const url = APPS_SCRIPT_URL + '?_=' + Date.now();   // rompe caché GH Pages
-  const res = await fetch(url, { cache: 'no-store' });
-  const data = await res.json();
+  try{
+    const url = APPS_SCRIPT_URL + '?_=' + Date.now();   // rompe caché GH Pages
+    const res = await fetch(url, { cache: 'no-store' });
+    const data = await res.json();
 
-  // Por si quieres mirar la consola del navegador:
-  console.log('API data:', data);
-
-  drawCounter(data.totalKm || 0);
-  drawCards(data.pasajeros || []);
+    console.log('API data:', data);
+    drawCounter(data.totalKm || 0);
+    drawCards(data.pasajeros || []);
+  }catch(err){
+    console.error('Error cargando datos:', err);
+  }
 }
 
 function drawCounter(km){
@@ -248,7 +248,7 @@ function drawCounter(km){
 }
 
 // Tarjetas con SVGs (no emojis)
-ffunction drawCards(list){
+function drawCards(list){
   const wrap = document.getElementById('cards');
   if (!wrap){ console.warn('No existe #cards'); return; }
 
@@ -283,7 +283,7 @@ ffunction drawCards(list){
           ${svg('pin')} <span>${p.ubicacion || ''}</span>
         </div>
 
-        <!-- ➜ solo los km añadidos; el acumulado lo dejamos de “tooltip” -->
+        <!-- Solo los km añadidos; acumulado como tooltip -->
         <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
           ${svg('plus')} <span>${p.km_desde_anterior || 0} km</span>
         </div>
@@ -293,7 +293,5 @@ ffunction drawCards(list){
   wrap.appendChild(frag);
 }
 
-
 // Carga al arrancar
 window.addEventListener('load', loadData);
-
