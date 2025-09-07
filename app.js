@@ -248,9 +248,17 @@ function drawCounter(km){
 }
 
 // Tarjetas con SVGs (no emojis)
-function drawCards(list){
+ffunction drawCards(list){
   const wrap = document.getElementById('cards');
   if (!wrap){ console.warn('No existe #cards'); return; }
+
+  // ➜ más reciente primero (por fecha); si falta fecha, cae al acumulado
+  list.sort((a,b)=>{
+    const tb = Date.parse(b.timestamp || '') || 0;
+    const ta = Date.parse(a.timestamp || '') || 0;
+    if (tb !== ta) return tb - ta;
+    return (b.km_acumulados || 0) - (a.km_acumulados || 0);
+  });
 
   wrap.innerHTML = '';
   if (!list.length){
@@ -275,15 +283,16 @@ function drawCards(list){
           ${svg('pin')} <span>${p.ubicacion || ''}</span>
         </div>
 
-        <div class="row kms">
+        <!-- ➜ solo los km añadidos; el acumulado lo dejamos de “tooltip” -->
+        <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
           ${svg('plus')} <span>${p.km_desde_anterior || 0} km</span>
-          &nbsp;·&nbsp; <strong>${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km</strong>
         </div>
       </div>`;
     frag.appendChild(card);
   });
   wrap.appendChild(frag);
 }
+
 
 // Carga al arrancar
 window.addEventListener('load', loadData);
