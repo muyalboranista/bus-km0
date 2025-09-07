@@ -271,7 +271,7 @@ function drawCards(list){
   const wrap = document.getElementById('cards');
   if (!wrap){ console.warn('No existe #cards'); return; }
 
-  // ➜ más reciente primero (por fecha); si falta fecha, cae al acumulado
+  // más reciente primero (por fecha); si falta fecha, cae al acumulado
   list.sort((a,b)=>{
     const tb = Date.parse(b.timestamp || '') || 0;
     const ta = Date.parse(a.timestamp || '') || 0;
@@ -287,10 +287,14 @@ function drawCards(list){
 
   const frag = document.createDocumentFragment();
   list.forEach(p=>{
+    // Asegura que el valor que pintamos es numérico
+    const kmAdd = Number(p.km_desde_anterior) || 0;
+
     const card = document.createElement('article');
     card.className = 'card';
     card.innerHTML = `
       <img class="ph" src="${p.foto || ''}" alt="${(p.nombre||'').replace(/"/g,'&quot;')}">
+
       <div class="meta">
         <div class="name display" style="margin-bottom:.25rem">${p.nombre || ''}</div>
 
@@ -302,16 +306,14 @@ function drawCards(list){
           ${svg('pin')} <span>${p.ubicacion || ''}</span>
         </div>
 
-        <!-- Solo los km añadidos; acumulado como tooltip -->
-                <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
-          <span class="plus">+</span> <span>${p.km_desde_anterior || 0} km</span>
+        <!-- Solo UN '+': lo ponemos como texto,
+             y quitamos el icono de suma para evitar duplicados -->
+        <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
+          <span class="plus" aria-hidden="true">+</span>
+          <span>${new Intl.NumberFormat('es-ES').format(kmAdd)} km</span>
         </div>
-
       </div>`;
     frag.appendChild(card);
   });
   wrap.appendChild(frag);
 }
-
-// Carga al arrancar
-window.addEventListener('load', loadData);

@@ -131,20 +131,21 @@ body{
 .howto-graphic .icon{
   color:#fff;
   opacity:.95;
-  width: clamp(90px, 12vw, 150px);
-  height: clamp(90px, 12vw, 150px);
+  width: clamp(82px, 10vw, 120px);
+  height: clamp(82px, 10vw, 120px);
   display:grid; place-items:center;
 }
 .howto-graphic .icon svg{ width:100%; height:100%; }
 
 /* CTA a juego y bien visible */
 .howto-graphic .cta{
-  grid-column: 1 / -1;     /* centrada en desktop */
-  margin: .5rem auto 0;
-  min-width: clamp(220px, 26vw, 320px);
-  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  background:#fff;
+  color:#111;
+  border: 2.5px solid #111;
+  box-shadow: 0 6px 0 rgba(0,0,0,.25);
+  font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+  letter-spacing: .04em;
 }
-
 /* (opcional) separador superior para respirar bajo el contador */
 .howto{ scroll-margin-top: 80px; }
 
@@ -158,19 +159,18 @@ body{
 }
 .step-icon{ font-size:2rem; line-height:1; }
 
-/* Tipos grandes y legibles (sin peso extra) */
+/* Títulos y descripciones más equilibrados */
 .step-title{
-  margin: .2rem 0 0 0;
-  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  font-family: "Superlumina", system-ui, sans-serif;
+  text-transform: none;             /* más legible */
+  letter-spacing: .01em;
+  font-size: clamp(1.25rem, 2.8vw, 1.8rem);
   line-height: 1.15;
-  font-weight: 400;        /* más fino, legible */
+  color: #fff;
 }
 .step-desc{
-  margin: 0;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  line-height: 1.35;
-  opacity: .92;
-}
+  font-size: clamp(.95rem, 1.8vw, 1.05rem);
+  opacity:.9;
 
 /* CTA (unificado) */
 .cta{
@@ -235,21 +235,21 @@ body{
 
 /* NOMBRE mucho más legible */
 .card .name{
-  font-size: 1rem;
-  line-height: 1.15;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: .01em;
-  margin-bottom:.25rem;
+  font-family: "Superlumina", system-ui, sans-serif;
+  letter-spacing: .02em;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.1vw, 1.25rem);
+  line-height: 1.1;
+  color:#111;
 }
 .card .row{
   display:flex; align-items:center; gap:.45rem;
   color:#333; opacity:.9; font-size:.93rem;
 }
-.row svg{
-  width:16px; height:16px; flex:0 0 16px;
-  fill:#333; opacity:.9;
-}
+
+/* Filas con más contraste */
+.row{ color:#222; opacity: .95; }
+.row svg{ fill:#222; opacity:.95; }
 .user svg{ width:14px; height:14px; opacity:.95; }
 
 .kms{ color:var(--km0-red); font-weight:600; }
@@ -260,6 +260,18 @@ body{
   margin-right:.35rem;
   transform: translateY(-1px);
   font-weight:700;
+}
+.kms .plus{
+  display:inline-block;
+  font-weight: 800;
+  font-size: 1.05em;
+  margin-right:.25rem;
+  line-height:1;
+  color: var(--km0-red);
+}
+.kms span:last-child{
+  color: var(--km0-red);
+  font-weight: 600;
 }
 
 /* FOOTER */
