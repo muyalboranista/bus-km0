@@ -10,6 +10,34 @@
   src: url("superlumina.woff2") format("woff2");
   font-display: swap;
 }
+@font-face{
+  font-family: "Cuerpo";
+  src: url("cuerpo.woff2") format("woff2");
+  font-display: swap;
+}
+
+body{
+  margin:0;
+  background:var(--km0-white);
+  color:var(--km0-black);
+  /* Todo el texto normal en la fuente de lectura */
+  font-family: "Cuerpo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height:1.45;
+}
+/* Clase para titulares en Superlumina (mayúsculas y tracking) */
+.display{
+  font-family: "Superlumina", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* Aplica la clase .display SOLO donde queramos Superlumina */
+.counter .value{ font-family:"Superlumina", system-ui, sans-serif; }
+.hero .label{ font-family:"Cuerpo", system-ui, sans-serif; text-transform:none; letter-spacing:0; }
+
+.gallery h2{ margin:0 0 1rem 0; font-size: clamp(1.5rem, 3.6vw, 2.2rem) }
+.gallery h2.display{ font-size: clamp(1.8rem, 4.2vw, 2.6rem) }
+.cta{ font-family:"Superlumina", system-ui, sans-serif; text-transform:uppercase; letter-spacing:.03em; }
 
 *{box-sizing:border-box}
 html,body{height:100%}
