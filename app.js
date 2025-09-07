@@ -59,7 +59,7 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     const fotoUrl = await uploadToCloudinary(file);
 
     // 2) Enviar datos a Apps Script con FormData (evita preflight CORS)
-    msg.textContent = 'Guardando datos...';
+    msg.textContent = 'Enviando información... Por favor, espere unos segundos.';
     const payload = {
       secret: API_SECRET,
       nombre: f.nombre.value.trim(),
@@ -82,7 +82,7 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     const out = await r.json().catch(()=> ({}));
     if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
 
-    msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
+    msg.textContent = '¡Enviado! Cuando tu imagen sea aprobada, aparecerá en la lista de pasajeros y se acumularán tus KMs.';
     f.reset(); preview.src='';
 
     // (Opcional) cerrar el formulario al cabo de 2s
@@ -244,7 +244,30 @@ async function loadData(){
 
 function drawCounter(km){
   const el = document.getElementById('kmTotal');
-  if (el) el.textContent = new Intl.NumberFormat('es-ES').format(km);
+  if (!el) return;
+  const target = Number(km) || 0;
+  const start  = Number(el.dataset.value || 0);
+  el.dataset.value = target;
+  animateCounter(el, start, target, 1200);  // 1.2s, easing suave
+}
+
+function animateCounter(el, from, to, duration=1000){
+  const startTime = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3);         // easeOutCubic
+
+  function frame(now){
+    const p = Math.min(1, (now - startTime)/duration);
+    const val = Math.round(from + (to - from) * ease(p));
+    el.textContent = new Intl.NumberFormat('es-ES').format(val);
+    if (p < 1) requestAnimationFrame(frame);
+    else {
+      el.classList.remove('bump');
+      // pequeño “golpecito” al terminar
+      void el.offsetWidth; // reflow para reiniciar anim
+      el.classList.add('bump');
+    }
+  }
+  requestAnimationFrame(frame);
 }
 
 // Tarjetas con SVGs (no emojis)
@@ -284,9 +307,10 @@ function drawCards(list){
         </div>
 
         <!-- Solo los km añadidos; acumulado como tooltip -->
-        <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
-          ${svg('plus')} <span>${p.km_desde_anterior || 0} km</span>
+                <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
+          <span class="plus">+</span> <span>${p.km_desde_anterior || 0} km</span>
         </div>
+
       </div>`;
     frag.appendChild(card);
   });
