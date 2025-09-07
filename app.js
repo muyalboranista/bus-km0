@@ -207,3 +207,84 @@ function updateCitySuggestions(){
 }
 document.getElementById('pais')?.addEventListener('change', updateCitySuggestions);
 document.addEventListener('DOMContentLoaded', updateCitySuggestions);
+
+// --- SVGs pequeñitos (mismo estilo que llevábamos) ---
+function svg(name){
+  const base = 'class="icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"';
+  switch(name){
+    case 'insta': return `<svg ${base} fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.2-.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>`;
+    case 'x':     return `<svg ${base} fill="currentColor"><path d="M3 3h4.5l6 7.5L18 3h3l-7 9 7 9h-4.5l-6-7.5L6 21H3l7-9-7-9z"/></svg>`;
+    case 'tiktok':return `<svg ${base} fill="currentColor"><path d="M14 2c1.1 2.3 2.9 3.6 5 3.8V9c-1.8-.1-3.4-.7-5-1.8V15a7 7 0 1 1-7-7h1v3h-1a4 4 0 1 0 4 4V2h3z"/></svg>`;
+    case 'pin':   return `<svg ${base} fill="currentColor"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13s-7-8-7-13a7 7 0 0 1 7-7zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>`;
+    case 'plus':  return `<svg ${base} fill="currentColor"><path d="M11 3h2v8h8v2h-8v8h-2v-8H3v-2h8z"/></svg>`;
+    case 'cal':   return `<svg ${base} fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3v16H4V4h3V2zm12 8H5v8h14v-8z"/></svg>`;
+    default:      return `<svg ${base} fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>`;
+  }
+}
+function iconFor(red=''){
+  const r = red.toLowerCase();
+  if (r.includes('insta'))  return svg('insta');
+  if (r.includes('tiktok'))  return svg('tiktok');
+  if (r.includes('x') || r.includes('twitter')) return svg('x');
+  return svg(); // genérico
+}
+
+// === CARGA DE DATOS Y PINTADO ===
+async function loadData(){
+  const url = APPS_SCRIPT_URL + '?_=' + Date.now();   // rompe caché GH Pages
+  const res = await fetch(url, { cache: 'no-store' });
+  const data = await res.json();
+
+  // Por si quieres mirar la consola del navegador:
+  console.log('API data:', data);
+
+  drawCounter(data.totalKm || 0);
+  drawCards(data.pasajeros || []);
+}
+
+function drawCounter(km){
+  const el = document.getElementById('kmTotal');
+  if (el) el.textContent = new Intl.NumberFormat('es-ES').format(km);
+}
+
+// Tarjetas con SVGs (no emojis)
+function drawCards(list){
+  const wrap = document.getElementById('cards');
+  if (!wrap){ console.warn('No existe #cards'); return; }
+
+  wrap.innerHTML = '';
+  if (!list.length){
+    wrap.innerHTML = `<p class="muted">Aún no hay pasajeros aprobados.</p>`;
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  list.forEach(p=>{
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <img class="ph" src="${p.foto || ''}" alt="${(p.nombre||'').replace(/"/g,'&quot;')}">
+      <div class="meta">
+        <div class="name display" style="margin-bottom:.25rem">${p.nombre || ''}</div>
+
+        <div class="row user">
+          ${iconFor(p.red_social)} <span>${p.usuario || ''}</span>
+        </div>
+
+        <div class="row">
+          ${svg('pin')} <span>${p.ubicacion || ''}</span>
+        </div>
+
+        <div class="row kms">
+          ${svg('plus')} <span>${p.km_desde_anterior || 0} km</span>
+          &nbsp;·&nbsp; <strong>${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km</strong>
+        </div>
+      </div>`;
+    frag.appendChild(card);
+  });
+  wrap.appendChild(frag);
+}
+
+// Carga al arrancar
+window.addEventListener('load', loadData);
+
