@@ -71,36 +71,52 @@
   </header>
 
   <!-- CÓMO PARTICIPAR -->
-<section class="howto">
-  <div class="howto-inner">
-    <ul class="steps">
-      <li>
-        <svg class="step-icon" aria-hidden="true">
-          <use href="#i-cart"></use>
+<section class="howto" id="como-participar">
+  <div class="howto-graphic howto-graphic--xl">
+    <!-- Paso 1 -->
+    <div class="step">
+      <div class="icon" aria-hidden="true">
+        <!-- Carrito -->
+        <svg viewBox="0 0 64 64" role="img">
+          <path d="M6 10h7l5 24h28l6-18H16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="26" cy="50" r="4" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="46" cy="50" r="4" fill="none" stroke="currentColor" stroke-width="3"/>
         </svg>
-        <h3>Compra el disco físico</h3>
-        <p>Hazte con el álbum en su edición física.</p>
-      </li>
+      </div>
+      <h3 class="step-title">Compra el disco físico</h3>
+      <p class="step-desc">Hazte con el álbum en su edición física.</p>
+    </div>
 
-      <li>
-        <svg class="step-icon" aria-hidden="true">
-          <use href="#i-camera"></use>
+    <!-- Paso 2 -->
+    <div class="step">
+      <div class="icon" aria-hidden="true">
+        <!-- Cámara -->
+        <svg viewBox="0 0 64 64" role="img">
+          <rect x="6" y="20" width="52" height="34" rx="6" fill="none" stroke="currentColor" stroke-width="3"/>
+          <path d="M22 20l3-6h14l3 6" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="32" cy="38" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
         </svg>
-        <h3>Cuando te llegue, hazte una foto con él</h3>
-        <p>Súbenos tu foto con el disco.</p>
-      </li>
+      </div>
+      <h3 class="step-title">Cuando te llegue, hazte una foto con él</h3>
+      <p class="step-desc">Súbenos tu foto con el disco.</p>
+    </div>
 
-      <li>
-        <svg class="step-icon" aria-hidden="true">
-          <use href="#i-upload"></use>
+    <!-- Paso 3 -->
+    <div class="step">
+      <div class="icon" aria-hidden="true">
+        <!-- Flecha subir -->
+        <svg viewBox="0 0 64 64" role="img">
+          <path d="M32 8v44M16 28l16-16 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="14" y="52" width="36" height="4" rx="2" fill="currentColor"/>
         </svg>
-        <h3>Cuéntanos desde dónde te subes</h3>
-        <p>Indica ciudad y país.</p>
-      </li>
-    </ul>
+      </div>
+      <h3 class="step-title">Súbela indicando ciudad y país</h3>
+      <p class="step-desc">Cuéntanos desde dónde te subes al bus KM0.</p>
+    </div>
 
-    <a href="#join" class="cta display">SÚBETE AL AUTOBÚS</a>
+    <a href="#join" class="cta display" id="ctaLink">SUBIR AL AUTOBÚS</a>
   </div>
+</section>
 
 <section id="join" class="join" aria-hidden="true">
   <h3 class="display" style="margin:0 0 .5rem 0">Súbete al bus</h3>
@@ -170,6 +186,6 @@
     Hecho con ❤️ por alboranistas para alboranistas · <span class="brand">KM0</span>
   </footer>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
