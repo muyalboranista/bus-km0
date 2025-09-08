@@ -77,7 +77,7 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 });
 
 /* --------- Poblado de países + sugerencias --------- */
-const COUNTRIES = ["Afganistán","Albania","Alemania","Andorra","Angola","Antigua y Barbuda","Arabia Saudí","Argelia","Argentina","Armenia","Australia","Austria","Azerbaiyán","Bahamas","Bangladés","Barbados","Baréin","Bélgica","Belice","Benín","Bielorrusia","Birmania (Myanmar)","Bolivia","Bosnia y Herzegovina","Botsuana","Brasil","Brunéi","Bulgaria","Burkina Faso","Burundi","Bután","Cabo Verde","Camboya","Camerún","Canadá","Catar","Chad","Chile","China","Chipre","Colombia","Comoras","Congo","Corea del Norte","Corea del Sur","Costa de Marfil","Costa Rica","Croacia","Cuba","Dinamarca","Dominica","Ecuador","Egipto","El Salvador","Emiratos Árabes Unidos","Eritrea","Eslovaquia","Eslovenia","España","Estados Unidos","Estonia","Esuatini","Etiopía","Filipinas","Finlandia","Fiyi","Francia","Gabón","Gambia","Georgia","Ghana","Granada","Grecia","Guatemala","Guyana","Guinea","Guinea Ecuatorial","Guinea-Bisáu","Haití","Honduras","Hungría","India","Indonesia","Irak","Irán","Irlanda","Islandia","Islas Marshall","Islas Salomón","Israel","Italia","Jamaica","Japón","Jordania","Kazajistán","Kenia","Kirguistán","Kiribati","Kuwait","Laos","Lesoto","Letonia","Líbano","Liberia","Libia","Liechtenstein","Lituania","Luxemburgo","Madagascar","Malasia","Malaui","Maldivas","Malí","Malta","Marruecos","Mauricio","Mauritania","México","Micronesia","Moldavia","Mónaco","Mongolia","Montenegro","Mozambique","Namibia","Nauru","Nepal","Nicaragua","Níger","Nigeria","Noruega","Nueva Zelanda","Omán","Países Bajos","Pakistán","Palaos","Panamá","Papúa Nueva Guinea","Paraguay","Perú","Polonia","Portugal","Reino Unido","República Centroafricana","República Checa","República del Congo","República Democrática del Congo","República Dominicana","Ruanda","Rumanía","Rusia","Samoa","San Cristóbal y Nieves","San Marino","San Vicente y las Granadinas","Santa Lucía","Santo Tomé y Príncipe","Senegal","Serbia","Seychelles","Sierra Leona","Singapur","Siria","Somalia","Sri Lanka","Sudáfrica","Sudán","Sudán del Sur","Suecia","Suiza","Surinam","Tailandia","Tanzania","Tayikistán","Timor Oriental","Togo","Tonga","Trinidad y Tobago","Túnez","Turkmenistán","Turquía","Tuvalu","Ucrania","Uganda","Uruguay","Uzbekistán","Vanuatu","Venezuela","Vietnam","Yemen","Yibuti","Zambia","Zimbabue"];
+const COUNTRIES = [/* … (tu lista igual que antes) … */];
 function populateCountries(){
   const sel = document.getElementById('pais');
   if(!sel) return;
@@ -91,13 +91,7 @@ function populateCountries(){
 }
 document.addEventListener('DOMContentLoaded', populateCountries);
 
-const CITY_SUGGESTIONS = {
-  "España": ["Madrid","Barcelona","Valencia","Sevilla","Zaragoza","Málaga","Murcia","Palma","Las Palmas de Gran Canaria","Bilbao","Alicante","Córdoba","Valladolid","Vigo","Gijón","Hospitalet de Llobregat","A Coruña","Vitoria-Gasteiz","Granada","Elche","Oviedo","Santa Cruz de Tenerife","Badalona","Cartagena","Terrassa","Jerez de la Frontera","Sabadell","Móstoles","Alcalá de Henares","Pamplona","Fuenlabrada","Almería","Leganés","Donostia / San Sebastián","Burgos","Santander","Castellón de la Plana","Getafe","Albacete"],
-  "México": ["Ciudad de México","Guadalajara","Monterrey","Puebla","Tijuana","León","Querétaro","Toluca","Mérida","San Luis Potosí","Aguascalientes","Hermosillo","Chihuahua","Saltillo","Morelia","Culiacán","Cancún","Veracruz","Villahermosa","Durango","Acapulco","Torreón","Xalapa","Tepic"],
-  "Argentina": ["Buenos Aires","Córdoba","Rosario","Mendoza","La Plata","Mar del Plata","San Miguel de Tucumán","Salta","Santa Fe","Corrientes","Bahía Blanca","Resistencia","Posadas","San Salvador de Jujuy","Neuquén","Santiago del Estero","Paraná"],
-  "Chile": ["Santiago","Valparaíso","Viña del Mar","Concepción","La Serena","Antofagasta","Temuco","Rancagua","Iquique","Puerto Montt","Talca","Arica","Copiapó","Osorno","Chillán"],
-  "Colombia": ["Bogotá","Medellín","Cali","Barranquilla","Cartagena","Cúcuta","Bucaramanga","Soacha","Ibagué","Soledad","Santa Marta","Villavicencio","Pereira","Bello","Valledupar","Montería"]
-};
+const CITY_SUGGESTIONS = { /* … (tu objeto igual que antes) … */ };
 function updateCitySuggestions(){
   const selPais = document.getElementById('pais');
   const dl = document.getElementById('ciudadSuggestions');
@@ -139,15 +133,15 @@ function iconFor(red=''){
   return svg();
 }
 
-// Normaliza el @usuario a minúsculas (no tocamos el @)
+/* --------- Normalizaciones de texto --------- */
+// @usuario en minúsculas (dejando el @)
 function normalizeHandle(u = '') {
   u = String(u).trim();
   if (!u) return '';
   if (!u.startsWith('@')) u = '@' + u;
   return '@' + u.slice(1).toLocaleLowerCase('es-ES');
 }
-
-// Title Case "inteligente" para es-ES (evita poner en mayúsculas preposiciones cortas)
+// Title Case “inteligente” para es-ES
 function titleCaseEs(str = '') {
   const small = new Set(['de','del','la','las','los','y','en','el','al','a','o']);
   return String(str)
@@ -159,16 +153,42 @@ function titleCaseEs(str = '') {
       return ww.charAt(0).toLocaleUpperCase('es-ES') + ww.slice(1);
     })
     .join(' ')
-    .replace(/\s*,\s*/g, ', '); // limpia comas
+    .replace(/\s*,\s*/g, ', ');
 }
 
 /* --------- Carga de datos + pintado --------- */
+window.addEventListener('load', loadData);
+
 async function loadData(){
   const url = APPS_SCRIPT_URL + '?_=' + Date.now();
   const res = await fetch(url, { cache:'no-store' });
   const data = await res.json();
+
+  // contador de km
   drawCounter(data.totalKm || 0);
-  drawCards(data.pasajeros || []);
+
+  // ordena por fecha (más reciente primero); si falta fecha, cae al acumulado
+  const list = (data.pasajeros || []).slice().sort((a,b)=>{
+    const tb = Date.parse(b.timestamp || '') || 0;
+    const ta = Date.parse(a.timestamp || '') || 0;
+    if (tb !== ta) return tb - ta;
+    return (b.km_acumulados||0) - (a.km_acumulados||0);
+  });
+
+  // pinta tarjetas (con paginación simple)
+  drawPaged(list);
+
+  // badge con número de pasajeros junto al título
+  const h = document.querySelector('.gallery h2');
+  if (h){
+    let badge = h.querySelector('.count-badge');
+    if (!badge){
+      badge = document.createElement('span');
+      badge.className = 'count-badge';
+      h.appendChild(badge);
+    }
+    badge.textContent = String(list.length);
+  }
 }
 
 function drawCounter(km){
@@ -179,46 +199,72 @@ function drawCounter(km){
   }
 }
 
+/* --------- Tarjetas --------- */
 function drawCards(list){
   const wrap = document.getElementById('cards');
-  if (!wrap){ console.warn('No existe #cards'); return; }
+  if (!wrap) return;
 
-  list.sort((a,b)=>{
-    const tb = Date.parse(b.timestamp || '') || 0;
-    const ta = Date.parse(a.timestamp || '') || 0;
-    if (tb !== ta) return tb - ta;
-    return (b.km_acumulados || 0) - (a.km_acumulados || 0);
-  });
-
+  // limpiar y crear fragment
   wrap.innerHTML = '';
-  if (!list.length){
-    wrap.innerHTML = `<p class="muted">Aún no hay pasajeros aprobados.</p>`;
-    return;
-  }
-
   const frag = document.createDocumentFragment();
+
   list.forEach(p=>{
-    const kmAdd = Number(p.km_desde_anterior) || 0;
+    const nombre     = (p.nombre || '').trim();
+    const usuario    = normalizeHandle(p.usuario || '');
+    const ubicacion  = titleCaseEs(p.ubicacion || '');
+    const kmsAdd     = Number(p.km_desde_anterior || 0);
+
     const card = document.createElement('article');
     card.className = 'card';
     card.innerHTML = `
-      <img class="ph" src="${p.foto || ''}" alt="${(p.nombre||'').replace(/"/g,'&quot;')}">
+      <img class="ph" src="${p.foto || ''}" alt="${(nombre||'').replace(/"/g,'&quot;')}">
       <div class="meta">
-        <div class="name display" style="margin-bottom:.25rem">${p.nombre || ''}</div>
+        <div class="name display">${nombre}</div>
+
         <div class="row user">
-          ${iconFor(p.red_social)} <span>${p.usuario || ''}</span>
+          ${iconFor(p.red_social)} <span>${usuario}</span>
         </div>
+
         <div class="row">
-          ${svg('pin')} <span>${p.ubicacion || ''}</span>
+          ${svg('pin')} <span>${ubicacion}</span>
         </div>
+
         <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
-          <span class="plus" aria-hidden="true">+</span>
-          <span>${new Intl.NumberFormat('es-ES').format(kmAdd)} km</span>
+          <span class="plus">+</span>
+          <span>${new Intl.NumberFormat('es-ES').format(kmsAdd)} km</span>
         </div>
       </div>`;
     frag.appendChild(card);
   });
+
   wrap.appendChild(frag);
 }
 
-window.addEventListener('load', loadData);
+/* --------- Paginación simple --------- */
+const PAGE_SIZE = 12;
+let page = 1;
+let fullList = [];
+
+function drawPaged(list){
+  // guarda lista completa y dibuja hasta PAGE_SIZE*page
+  fullList = list.slice();
+  const slice = fullList.slice(0, PAGE_SIZE * page);
+  drawCards(slice);
+
+  // botón cargar más
+  let more = document.getElementById('loadMore');
+  if (!more){
+    more = document.createElement('button');
+    more.id = 'loadMore';
+    more.className = 'cta';
+    more.textContent = 'Cargar más';
+    document.querySelector('.gallery-inner')?.appendChild(more);
+    more.addEventListener('click', ()=>{
+      page++;
+      const next = fullList.slice(0, PAGE_SIZE * page);
+      drawCards(next);
+      if (next.length >= fullList.length) more.style.display = 'none';
+    });
+  }
+  more.style.display = (slice.length < fullList.length) ? 'inline-block' : 'none';
+}
