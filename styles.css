@@ -173,3 +173,22 @@ body{
 }
 h1.display{ font-size:clamp(2.4rem,6vw,3.2rem); }
 h2.display, h3.display{ font-size:clamp(2rem,4.2vw,2.6rem); }
+
+
+/* Ajustes específicos para títulos de pasos en la infografía */
+.howto-graphic .step-title {
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  text-transform: uppercase;     /* siempre mayúsculas */
+  letter-spacing: .04em;
+  font-size: clamp(1.4rem, 3.5vw, 2rem); /* más grande que antes */
+  line-height: 1.05;             /* más compacto */
+  margin-bottom: .25rem;         /* reduce aire con el texto siguiente */
+}
+
+/* El texto descriptivo justo debajo */
+.howto-graphic .step-desc {
+  font-size: clamp(.9rem, 2vw, 1rem);
+  margin-top: 0;                 /* quita aire extra arriba */
+}
