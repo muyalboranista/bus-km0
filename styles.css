@@ -4,7 +4,6 @@
 }
 
 /* Fuentes */
-@font-face{ font-family:"Superlumina"; src: url("superlumina.woff2") format("woff2"); font-display:swap; }
 @font-face{ font-family:"Cuerpo";     src: url("cuerpo.woff2")     format("woff2"); font-display:swap; }
 
 /* Base */
@@ -15,23 +14,6 @@ body{
   font-family:"Cuerpo", system-ui,-apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height:1.45; font-weight:400;
 }
-
-/* TITULARES CON SUPERLUMINA */
-.display{
-  font-family: "Superlumina", system-ui, sans-serif;
-  font-weight: 200;       /* no bold, la fuente ya es fuerte */
-  text-transform: uppercase;
-  letter-spacing: 0.04em; /* un poco más abierto, para que respire */
-  line-height: 1.1;       /* que no se solape */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-h2.display, h3.display{
-  font-size: clamp(2rem, 4vw, 2.6rem);
-  margin-bottom: .8rem;
-  text-align: center;
-}
-
 
 /* Fuerza lectura en bloques */
 .howto,.steps li,.step-text,.gallery,.cards,.card,.card .meta,.counter .label,.foot{
@@ -123,3 +105,62 @@ h2.display, h3.display{
 @keyframes shadowPulse{ 0%,100%{ transform:translateY(8px) scaleX(1) } 50%{ transform:translateY(8px) scaleX(1.05) } }
 @keyframes drop{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)} }
 @keyframes bump{ 0%{ transform:translateY(0) scale(1) } 35%{ transform:translateY(-2px) scale(1.04) } 100%{ transform:translateY(0) scale(1) } }
+
+
+/* Declara la fuente con su peso real */
+@font-face{
+  font-family: "Superlumina";
+  src: url("superlumina.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Estilo base para titulares con Superlumina */
+.display{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;          /* <- clave: nunca faux-bold */
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tamaños típicos de sección (puedes ajustar) */
+h1.display{ font-size: clamp(2.4rem, 6vw, 3.2rem); }
+h2.display, h3.display{ font-size: clamp(2rem, 4.2vw, 2.6rem); }
+
+/* Botón CTA: que NO fuerce negrita a Superlumina */
+.cta{ 
+  font-family: "Cuerpo", system-ui, sans-serif; /* texto legible */
+  font-weight: 600;                              /* aspecto sólido sin faux bold */
+}
+.cta.display{
+  font-family: "Superlumina", system-ui, sans-serif;
+  font-weight: 400 !important;                   /* <- evita la negrita simulada */
+  letter-spacing: .04em;
+}
+
+/* Títulos de la infografía (los de debajo de los iconos) */
+.howto-graphic .step-title.display{
+  font-weight: 400 !important;                   /* <- quita la faux bold */
+  letter-spacing: .04em;
+}
+
+/* Si quieres que esos títulos usen la fuente de lectura en lugar de Superlumina,
+   descomenta este bloque y quita la clase .display de ese elemento:
+.howto-graphic .step-title{
+  font-family: "Cuerpo", system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: none;
+}
+*/
+
+/* CTA grande bajo la infografía: que no herede pesos raros */
+.howto-graphic .cta{
+  font-family: "Cuerpo", system-ui, sans-serif;
+  font-weight: 700;
+}
+
