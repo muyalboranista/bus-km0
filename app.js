@@ -139,14 +139,49 @@ function iconFor(red=''){
   return svg();
 }
 
+// Normaliza el @usuario a minúsculas (no tocamos el @)
+function normalizeHandle(u = '') {
+  u = String(u).trim();
+  if (!u) return '';
+  if (!u.startsWith('@')) u = '@' + u;
+  return '@' + u.slice(1).toLocaleLowerCase('es-ES');
+}
+
+// Title Case "inteligente" para es-ES (evita poner en mayúsculas preposiciones cortas)
+function titleCaseEs(str = '') {
+  const small = new Set(['de','del','la','las','los','y','en','el','al','a','o']);
+  return String(str)
+    .toLocaleLowerCase('es-ES')
+    .split(/\s+/)
+    .map((w,i) => {
+      const ww = w.normalize('NFC');
+      if (i>0 && small.has(ww)) return ww;
+      return ww.charAt(0).toLocaleUpperCase('es-ES') + ww.slice(1);
+    })
+    .join(' ')
+    .replace(/\s*,\s*/g, ', '); // limpia comas
+}
+
 /* --------- Carga de datos + pintado --------- */
 async function loadData(){
   const url = APPS_SCRIPT_URL + '?_=' + Date.now();
   const res = await fetch(url, { cache:'no-store' });
   const data = await res.json();
   drawCounter(data.totalKm || 0);
-  drawCards(data.pasajeros || []);
+  drawPaged(data.pasajeros || []);
 }
+// Muestra el número de pasajeros aprobados junto al título
+const h = document.querySelector('.gallery h2');
+if (h) {
+  let badge = h.querySelector('.count-badge');
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.className = 'count-badge';
+    h.appendChild(badge);
+  }
+  badge.textContent = `${(data.pasajeros || []).length}`;
+}
+
 
 function drawCounter(km){
   const el = document.getElementById('kmTotal');
@@ -157,45 +192,62 @@ function drawCounter(km){
 }
 
 function drawCards(list){
-  const wrap = document.getElementById('cards');
-  if (!wrap){ console.warn('No existe #cards'); return; }
+list.forEach(p=>{
+  const nombre     = (p.nombre || '').trim();                 // ya lo muestras en Superlumina (en mayúsculas)
+  const usuario    = normalizeHandle(p.usuario || '');
+  const ubicacion  = titleCaseEs(p.ubicacion || '');          // "Berlin, Alemania" → "Berlin, Alemania"
+  const kmsAdd     = p.km_desde_anterior || 0;
 
-  list.sort((a,b)=>{
-    const tb = Date.parse(b.timestamp || '') || 0;
-    const ta = Date.parse(a.timestamp || '') || 0;
-    if (tb !== ta) return tb - ta;
-    return (b.km_acumulados || 0) - (a.km_acumulados || 0);
-  });
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.innerHTML = `
+    <img class="ph" src="${p.foto || ''}" alt="${(nombre||'').replace(/"/g,'&quot;')}">
+    <div class="meta">
+      <div class="name display">${nombre}</div>
 
-  wrap.innerHTML = '';
-  if (!list.length){
-    wrap.innerHTML = `<p class="muted">Aún no hay pasajeros aprobados.</p>`;
-    return;
-  }
+      <div class="row user">
+        ${iconFor(p.red_social)} <span>${usuario}</span>
+      </div>
 
-  const frag = document.createDocumentFragment();
-  list.forEach(p=>{
-    const kmAdd = Number(p.km_desde_anterior) || 0;
-    const card = document.createElement('article');
-    card.className = 'card';
-    card.innerHTML = `
-      <img class="ph" src="${p.foto || ''}" alt="${(p.nombre||'').replace(/"/g,'&quot;')}">
-      <div class="meta">
-        <div class="name display" style="margin-bottom:.25rem">${p.nombre || ''}</div>
-        <div class="row user">
-          ${iconFor(p.red_social)} <span>${p.usuario || ''}</span>
-        </div>
-        <div class="row">
-          ${svg('pin')} <span>${p.ubicacion || ''}</span>
-        </div>
-        <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
-          <span class="plus" aria-hidden="true">+</span>
-          <span>${new Intl.NumberFormat('es-ES').format(kmAdd)} km</span>
-        </div>
-      </div>`;
-    frag.appendChild(card);
-  });
+      <div class="row">
+        ${svg('pin')} <span>${ubicacion}</span>
+      </div>
+
+      <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
+        ${svg('plus')} <span>${new Intl.NumberFormat('es-ES').format(kmsAdd)} km</span>
+      </div>
+    </div>`;
+  frag.appendChild(card);
+});
+
   wrap.appendChild(frag);
 }
 
 window.addEventListener('load', loadData);
+
+// Paginación simple
+const PAGE_SIZE = 12;
+let page = 1;
+let current = [];
+
+// Llama a esto en loadData, en vez de drawCards(data.pasajeros)
+function drawPaged(list){
+  current = list.slice(0, PAGE_SIZE * page);
+  drawCards(current);
+
+  // botón cargar más
+  let more = document.getElementById('loadMore');
+  if (!more){
+    more = document.createElement('button');
+    more.id = 'loadMore';
+    more.className = 'cta';
+    more.textContent = 'Cargar más';
+    document.querySelector('.gallery-inner')?.appendChild(more);
+    more.addEventListener('click', ()=>{
+      page++;
+      drawPaged(list);
+    });
+  }
+  more.style.display = (current.length < list.length) ? 'inline-block' : 'none';
+}
+

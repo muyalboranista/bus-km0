@@ -192,3 +192,72 @@ h2.display, h3.display{ font-size:clamp(2rem,4.2vw,2.6rem); }
   font-size: clamp(.9rem, 2vw, 1rem);
   margin-top: 0;                 /* quita aire extra arriba */
 }
+
+
+/* Infografía – títulos Superlumina: más grandes y con más aire */
+.howto-graphic .step-title{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.2;               /* <- subimos el interlineado */
+  letter-spacing: .035em;
+  margin: .15rem 0 .45rem;        /* <- un pelín más de aire inferior */
+}
+
+/* Infografía – descripción bajo el título: más compacta y pegada */
+.howto-graphic .step-desc{
+  font-family: "Cuerpo", system-ui, sans-serif;
+  font-size: clamp(.92rem, 1.7vw, 1.06rem);
+  line-height: 1.35;
+  margin-top: 0;
+  opacity: .9;
+}
+
+/* CTA – tipografía más visible */
+.cta{
+  font-family: "Cuerpo", system-ui, sans-serif !important; /* por defecto: legible */
+  font-weight: 700;
+  border: 2.5px solid #111;
+  padding: 1rem 1.6rem;
+}
+
+.cta.display{                                   /* si usas Superlumina en el CTA */
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);    /* más grande */
+  line-height: 1;
+}
+
+/* Card – nombre del pasajero (Superlumina) */
+.card .name{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);   /* más grande */
+  line-height: 1.12;                          /* menos compacto */
+  color: #111;
+  margin: .1rem 0 .25rem;
+}
+
+/* Un pelín más de aire interno en la tarjeta */
+.card .meta{ gap: .55rem; }
+
+/* Chapita con el número de pasajeros */
+.count-badge{
+  display:inline-block;
+  margin-left:.5rem;
+  vertical-align: middle;
+  font-family: "Cuerpo", system-ui, sans-serif;
+  font-weight:700;
+  font-size:.9rem;
+  color:#fff;
+  background: var(--km0-red);
+  padding:.18rem .5rem;
+  border-radius: 999px;
+}
