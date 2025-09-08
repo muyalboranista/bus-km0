@@ -16,8 +16,22 @@ body{
   line-height:1.45; font-weight:400;
 }
 
-/* Tipos display */
-.display{ font-family:"Superlumina", system-ui, sans-serif; text-transform:uppercase; letter-spacing:.02em; font-weight:400 }
+/* TITULARES CON SUPERLUMINA */
+.display{
+  font-family: "Superlumina", system-ui, sans-serif;
+  font-weight: 200;       /* no bold, la fuente ya es fuerte */
+  text-transform: uppercase;
+  letter-spacing: 0.04em; /* un poco más abierto, para que respire */
+  line-height: 1.1;       /* que no se solape */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h2.display, h3.display{
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  margin-bottom: .8rem;
+  text-align: center;
+}
+
 
 /* Fuerza lectura en bloques */
 .howto,.steps li,.step-text,.gallery,.cards,.card,.card .meta,.counter .label,.foot{
