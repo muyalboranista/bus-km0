@@ -164,3 +164,55 @@ h2.display, h3.display{ font-size: clamp(2rem, 4.2vw, 2.6rem); }
   font-weight: 700;
 }
 
+/* ===== Superlumina: arreglo definitivo ===== */
+@font-face{
+  font-family: "Superlumina";
+  src: url("superlumina.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* Titulares con Superlumina */
+.display{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;         /* <- no faux-bold */
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1.1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+/* Tamaños típicos */
+h1.display{ font-size: clamp(2.4rem, 6vw, 3.2rem); }
+h2.display, h3.display{ font-size: clamp(2rem, 4.2vw, 2.6rem); }
+
+/* Títulos de la infografía (tu HTML usa .step-title sin .display) */
+.howto-graphic .step-title{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  letter-spacing: .04em;
+  line-height: 1.15;
+  text-shadow: none !important;
+}
+
+/* Botón: que NO herede Superlumina a menos que lo marques tú */
+.cta{
+  font-family: "Cuerpo", system-ui, sans-serif !important;
+  font-weight: 700;
+  font-synthesis: none !important;
+}
+.cta.display{
+  font-family: "Superlumina", system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  letter-spacing: .04em;
+}
+
+
