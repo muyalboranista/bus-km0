@@ -53,6 +53,12 @@ body{
 }
 .counter .value.bump{ animation:bump .45s ease; }
 
+@keyframes bump{
+  0%{   transform: translateY(0) scale(1);   }
+  35%{  transform: translateY(-2px) scale(1.04); }
+  100%{ transform: translateY(0) scale(1);   }
+}
+
 /* ============ Cómo participar (faja roja) =========== */
 .howto{ background:var(--km0-red); color:#fff; padding:clamp(2rem,4vw,3rem) 1rem; }
 .howto-inner{ max-width:1100px; margin:0 auto; text-align:center; display:grid; gap:2rem; }
@@ -85,7 +91,9 @@ body{
   transition:transform .12s ease, box-shadow .12s ease;
   /* Superlumina LEGIBLE y en mayúsculas */
   font-family:"TuskerGrotesk", system-ui, sans-serif;
-  font-synthesis:none; font-weight:600; text-transform:uppercase; letter-spacing:.04em;
+  font-synthesis:none; font-weight:600; text-transform:uppercase; letter-spacing:.04em;font-size: clamp(1.25rem, 2.8vw, 1.55rem); /* ↑ tamaño */
+  letter-spacing: .06em;
+  line-height: 1;
 }
 .cta:hover{ transform:translateY(-2px) }
 .cta:disabled{ opacity:.6; cursor:not-allowed }
