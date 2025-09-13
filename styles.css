@@ -280,3 +280,22 @@ font-family: "TuskerGrotesk", system-ui, sans-serif !important;
 .row .icon { margin-right: 6px; vertical-align: -2px; color: var(--accent, #c51624); }
 .row.kms .icon { color: var(--accent, #c51624); }
 
+/* Quitar iconos de texto antiguos que tapan los SVG */
+.card .row::before { content: none !important; }
+
+/* iconos en filas de la tarjeta */
+.card .row .icon{
+  width: 18px;
+  height: 18px;
+  margin-right: .5rem;
+  vertical-align: -2px;
+  flex: none;
+  display: inline-block;
+  /* si el svg es gris oscuro y quieres suavizarlo: */
+  /* filter: grayscale(1) brightness(0.4); */
+}
+
+/* color/acento del "+ km" si ese svg es monocromo rojo ya no hace falta */
+.card .row.kms .icon{
+  filter: none;
+}
