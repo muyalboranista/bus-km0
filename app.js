@@ -116,22 +116,51 @@ document.addEventListener('DOMContentLoaded', updateCitySuggestions);
 
 /* --------- Iconos SVG pequeños --------- */
 function svg(name){
-  const base = 'class="icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"';
   switch(name){
-    case 'insta': return `<svg ${base} fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.2-.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>`;
-    case 'x':     return `<svg ${base} fill="currentColor"><path d="M3 3h4.5l6 7.5L18 3h3l-7 9 7 9h-4.5l-6-7.5L6 21H3l7-9-7-9z"/></svg>`;
-    case 'tiktok':return `<svg ${base} fill="currentColor"><path d="M14 2c1.1 2.3 2.9 3.6 5 3.8V9c-1.8-.1-3.4-.7-5-1.8V15a7 7 0 1 1-7-7h1v3h-1a4 4 0 1 0 4 4V2h3z"/></svg>`;
-    case 'pin':   return `<svg ${base} fill="currentColor"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13s-7-8-7-13a7 7 0 0 1 7-7zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>`;
-    default:      return `<svg ${base} fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>`;
+    case 'insta': 
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M36 18c-9.94 0-18 8.06-18 18s8.06 18 18 18 18-8.06 18-18-8.06-18-18-18zm0 29.4c-6.31 0-11.4-5.09-11.4-11.4S29.69 24.6 36 24.6 47.4 29.69 47.4 36 42.31 47.4 36 47.4zm22.2-29.82c0 2.44-1.98 4.42-4.42 4.42s-4.42-1.98-4.42-4.42 1.98-4.42 4.42-4.42 4.42 1.98 4.42 4.42z"/>
+      </svg>`;
+    case 'x': 
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M17 15l17.88 22.5L17 57h8.5l12.5-14.5L50.5 57H65L46.62 34.5 64 15H55.5L44 28.5 32.12 15H17z"/>
+      </svg>`;
+    case 'tiktok': 
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M45 6h9c0 7.2 5.8 13 13 13v9c-7.2 0-13-5.8-13-13h-9v29c0 7.2-5.8 13-13 13s-13-5.8-13-13 5.8-13 13-13c1.2 0 2.3.2 3.3.5V22c-1.1-.2-2.2-.3-3.3-.3-12.2 0-22 9.8-22 22s9.8 22 22 22 22-9.8 22-22V6z"/>
+      </svg>`;
+    case 'threads': 
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M36 6C19.43 6 6 19.43 6 36s13.43 30 30 30 30-13.43 30-30S52.57 6 36 6zm0 54c-13.25 0-24-10.75-24-24S22.75 12 36 12s24 10.75 24 24-10.75 24-24 24z"/>
+        <path d="M42 47c-3 3-9 2-11-2-1-2-1-4 0-6 2-4 8-5 11-2l4-4c-4-5-14-5-18 0-3 4-3 10 0 14 5 6 15 6 19 0l-5-4z"/>
+      </svg>`;
+    case 'fb': 
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M36 6C19.4 6 6 19.4 6 36c0 15 10.8 27.4 25 30v-21h-7v-9h7v-6c0-7 4-11 10-11 3 0 6 .2 7 .3v8h-5c-3 0-4 2-4 4v5h9l-1 9h-8v21c14.2-2.6 25-15 25-30 0-16.6-13.4-30-30-30z"/>
+      </svg>`;
+    case 'pin':
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M36 6C25 6 16 15 16 26c0 14 20 40 20 40s20-26 20-40c0-11-9-20-20-20zm0 28a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+      </svg>`;
+    case 'plus':
+      return `<svg class="icon" viewBox="0 0 72 72" aria-hidden="true" fill="currentColor">
+        <path d="M36 16v40M16 36h40" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+      </svg>`;
+    default:
+      return `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>`;
   }
 }
+
 function iconFor(red=''){
-  const r = red.toLowerCase();
-  if (r.includes('insta'))  return svg('insta');
-  if (r.includes('tiktok'))  return svg('tiktok');
-  if (r.includes('x') || r.includes('twitter')) return svg('x');
-  return svg();
+  const r = String(red).toLowerCase();
+  if (r.includes('insta') || r.includes('ig'))           return svg('insta');
+  if (r.includes('tiktok'))                               return svg('tiktok');
+  if (r.includes('threads'))                              return svg('threads');
+  if (r.includes('facebook') || r.includes('fb'))         return svg('fb');
+  if (r.includes('x') || r.includes('twitter'))           return svg('x');
+  return svg(); // por defecto
 }
+
 
 /* --------- Normalizaciones de texto --------- */
 // @usuario en minúsculas (dejando el @)
@@ -204,7 +233,6 @@ function drawCards(list){
   const wrap = document.getElementById('cards');
   if (!wrap) return;
 
-  // limpiar y crear fragment
   wrap.innerHTML = '';
   const frag = document.createDocumentFragment();
 
@@ -230,8 +258,7 @@ function drawCards(list){
         </div>
 
         <div class="row kms" title="Acumulado: ${new Intl.NumberFormat('es-ES').format(p.km_acumulados || 0)} km">
-          <span class="plus">+</span>
-          <span>${new Intl.NumberFormat('es-ES').format(kmsAdd)} km</span>
+          ${svg('plus')} <span>${new Intl.NumberFormat('es-ES').format(kmsAdd)} km</span>
         </div>
       </div>`;
     frag.appendChild(card);

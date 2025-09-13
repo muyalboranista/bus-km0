@@ -133,8 +133,7 @@ body{
   font-size:clamp(1.05rem,2.1vw,1.25rem); line-height:1.12; color:#111;
 }
 
-.row{ display:flex; align-items:center; gap:.45rem; color:#222; opacity:.95; }
-.row svg{ width:16px; height:16px; flex:0 0 16px; fill:#222; opacity:.95; }
+.row{ display:flex; align-items:center; gap:.5rem;}
 .user svg{ width:14px; height:14px; opacity:.95; }
 .kms{ color:var(--km0-red) }
 .kms .plus{ display:inline-block; font-weight:800; font-size:1.05em; margin-right:.25rem; line-height:1; color:var(--km0-red) }
@@ -253,3 +252,31 @@ font-family: "TuskerGrotesk", system-ui, sans-serif !important;
   padding:.18rem .5rem;
   border-radius: 999px;
 }
+
+/* Iconos pequeños en filas de meta */
+.card .row {
+  display: flex;
+  align-items: center;
+  gap: 8px;                /* hueco entre icono y texto */
+}
+
+.card .row .icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  color: var(--muted, #6b7280); /* gris suave por defecto */
+  fill: currentColor;           /* paths */
+  stroke: currentColor;         /* por si el icono lleva stroke (el plus) */
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: -2px;
+  color: currentColor;           /* usa el color del texto */
+}
+.row .icon { margin-right: 6px; vertical-align: -2px; color: var(--accent, #c51624); }
+.row.kms .icon { color: var(--accent, #c51624); }
+
