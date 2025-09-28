@@ -299,3 +299,30 @@ font-family: "TuskerGrotesk", system-ui, sans-serif !important;
 .card .row.kms .icon{
   filter: none;
 }
+
+.btn-primary{
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid #fff;   /* más fino */
+  border-radius: 999px;
+  padding: 6px 16px;          /* menos alto y ancho */
+  font-family: "Cuerpo", system-ui, sans-serif;
+  font-weight: 600;           /* un poco más ligero */
+  font-size: 0.85rem;         /* letra más pequeña */
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.btn-primary:hover{
+  background: #fff;
+  color: #d10607;
+}
+
+
+#shops{margin-top:16px}
+.shops-note{margin:0 0 10px;opacity:.9}
+.shops-grid{display:flex;flex-wrap:wrap;gap:16px 24px;justify-content:center;align-items:center}
+.shops-grid img{height:26px;width:auto;display:block}
+
+

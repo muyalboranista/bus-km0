@@ -281,3 +281,9 @@ function drawPaged(list){
 }
 console.log("app.js v1 cargado");
 
+document.getElementById('toggle-shops').addEventListener('click', ()=>{
+  const box = document.getElementById('shops');
+  box.hidden = !box.hidden;
+});
+
+
