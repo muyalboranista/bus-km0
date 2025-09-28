@@ -37,6 +37,12 @@
     .label{letter-spacing:.1em; text-transform:uppercase; opacity:.9; font-size:0.8rem}
     .teaser{margin:28px auto 0; font-size:clamp(16px,2.2vw,20px); opacity:.98}
     footer{position:fixed; inset:auto 0 12px; text-align:center; font-size:12px; opacity:.6}
+  .shop-cta{margin:40px auto 0;}
+    .shop-heading{margin:0 0 16px; font-family:"TuskerGrotesk", system-ui, sans-serif; font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-size:clamp(18px,3.2vw,28px)}
+    .shops{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; align-items:center; justify-items:center}
+    @media (max-width:800px){ .shops{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+    .shop{display:block; width:180px; height:40px; transition: transform .15s ease, opacity .15s ease; opacity:.95}
+    .shop:hover{transform:translateY(-2px); opacity:1}
   </style>
 </head>
 <body>
@@ -49,8 +55,26 @@
       <div class="tile"><div class="num" id="s">–</div><div class="label">SEGUNDOS</div></div>
     </div>
     <p class="teaser" aria-live="polite">Toda brújula apunta al mismo lugar. El 7 de noviembre empieza el verdadero camino.</p>
+    <!-- CTA PREVENTA -->
+    <section aria-labelledby="shop-title" class="shop-cta">
+      <h2 id="shop-title" class="shop-heading">Mientras esperas, hazte con KM0</h2>
+      <nav class="shops" aria-label="Tiendas de preventa">
+        <a class=\"shop\" href=\"https://pabloalborankm0.es\" target=\"_blank\" rel=\"noopener\" aria-label=\"Precomprar en Warner\">
+          <img src=\"icons/warner.svg\" alt=\"Warner\" width=\"120\" height=\"40\"/>
+        </a>
+        <a class=\"shop\" href=\"https://www.amazon.es/s?k=km0+pablo+alboran&rh=n%3A599373031&dc&ds=v1%3AMGgLPiVsZSg190L8Q9W4uTF0wXZXrI8E7Y6shhJfAu4&crid=28TLOHKAHF9JS&qid=1759060543&rnid=1703620031&sprefix=km%2Caps%2C82&ref=sr_nr_n_6\" target=\"_blank\" rel=\"noopener\" aria-label=\"Precomprar en Amazon\">
+          <img src=\"icons/amazon.svg\" alt=\"Amazon\" width=\"120\" height=\"40\"/>
+        </a>
+        <a class=\"shop\" href=\"https://www.elcorteingles.es/bio/pablo-alboran/musica\" target=\"_blank\" rel=\"noopener\" aria-label=\"Precomprar en El Corte Inglés\">
+          <img src=\"icons/elcorteingles.svg\" alt=\"El Corte Inglés\" width=\"120\" height=\"40\"/>
+        </a>
+        <a class=\"shop\" href=\"https://www.fnac.es/SearchResult/ResultList.aspx?Search=km0+pablo+alborán&sft=1&sa=hist\" target=\"_blank\" rel=\"noopener\" aria-label=\"Precomprar en Fnac\">
+          <img src=\"icons/fnac.svg\" alt=\"Fnac\" width=\"120\" height=\"40\"/>
+        </a>
+      </nav>
+    </section>
   </main>
-  <footer>Muy Alboranista! | Alboranistas CDF | MemeAlborán25</footer>
+  <footer>Muy Alboranista!</footer>
 
   <script>
     const target = new Date('2025-11-07T19:00:00+01:00').getTime();
