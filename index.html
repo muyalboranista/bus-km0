@@ -17,7 +17,7 @@
     }
     .wrap{width:min(1100px,94vw); padding:24px}
     h1{
-      margin:0 0 14px; 
+      margin:0 0 24px; 
       font-family:"TuskerGrotesk", system-ui, sans-serif; 
       font-weight:700; 
       font-size:clamp(28px,6vw,72px); 
@@ -27,15 +27,15 @@
     }
     .timer{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; width:min(900px,100%); margin:22px auto}
     @media (max-width:640px){ .timer{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
-    .tile{border:2px solid rgba(255,255,255,.22); border-radius:20px; padding:24px 18px; display:flex; flex-direction:column; align-items:center; justify-content:center}
+    .tile{border:2px solid rgba(255,255,255,.22); border-radius:20px; padding:28px 18px; display:flex; flex-direction:column; align-items:center; justify-content:center}
     .num{
       font-family:"TuskerGrotesk", system-ui, sans-serif; font-synthesis:none; text-transform:uppercase;
       font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:.02em;
       font-size:clamp(52px,12vw,132px); line-height:1;
-      margin-bottom:8px;
+      margin-bottom:16px; /* más espacio entre número y palabra */
     }
-    .label{letter-spacing:.08em; text-transform:uppercase; opacity:.9; font-size:0.75rem}
-    .teaser{margin:22px auto 0; font-size:clamp(16px,2.2vw,20px); opacity:.98}
+    .label{letter-spacing:.1em; text-transform:uppercase; opacity:.9; font-size:0.8rem}
+    .teaser{margin:28px auto 0; font-size:clamp(16px,2.2vw,20px); opacity:.98}
     footer{position:fixed; inset:auto 0 12px; text-align:center; font-size:12px; opacity:.6}
   </style>
 </head>
