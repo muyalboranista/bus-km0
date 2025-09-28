@@ -77,7 +77,7 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 });
 
 /* --------- Poblado de países + sugerencias --------- */
-const COUNTRIES = [/* … (tu lista igual que antes) … */];
+const COUNTRIES = ["España","Argentina","México","Colombia","Chile","Perú","Uruguay","Paraguay","Bolivia","Ecuador","Venezuela","Costa Rica","Panamá","Guatemala","Honduras","El Salvador","Nicaragua","República Dominicana","Puerto Rico","Estados Unidos","Canadá","Brasil","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Bélgica","Países Bajos","Luxemburgo","Suiza","Austria","Polonia","Hungría","República Checa","Eslovaquia","Eslovenia","Croacia","Bosnia y Herzegovina","Serbia","Rumanía","Bulgaria","Grecia","Turquía","Ucrania","Rusia","Suecia","Noruega","Dinamarca","Finlandia","Islandia","Estonia","Letonia","Lituania","Andorra","Mónaco","San Marino","Malta","Chipre","Marruecos","Argelia","Túnez","Egipto","Israel","Líbano","Jordania","Arabia Saudí","Emiratos Árabes Unidos","Qatar","Bahréin","Kuwait","Omán","Sudáfrica","Etiopía","Kenia","Tanzania","Nigeria","Ghana","India","Pakistán","Bangladés","Sri Lanka","Nepal","China","Japón","Corea del Sur","Filipinas","Indonesia","Malasia","Singapur","Tailandia","Vietnam","Australia","Nueva Zelanda"];
 function populateCountries(){
   const sel = document.getElementById('pais');
   if(!sel) return;
@@ -285,5 +285,6 @@ document.getElementById('toggle-shops').addEventListener('click', ()=>{
   const box = document.getElementById('shops');
   box.hidden = !box.hidden;
 });
+
 
 
