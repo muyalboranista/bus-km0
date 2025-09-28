@@ -39,11 +39,11 @@
     footer{position:fixed; inset:auto 0 12px; text-align:center; font-size:12px; opacity:.6}
   .shop-cta{margin:40px auto 0;}
     .shop-heading{margin:0 0 16px; font-family:"TuskerGrotesk", system-ui, sans-serif; font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-size:clamp(18px,3.2vw,28px)}
-    .shops{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:18px; align-items:center; justify-items:center}
+    .shops{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:18px 28px}
     @media (max-width:800px){ .shops{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px } } }
-    .shop{display:block; transition: transform .15s ease, opacity .15s ease; opacity:.95}
+    .shop{display:block; transition: transform .15s ease, opacity .15s ease; opacity:.95; flex:0 1 140px; text-align:center}
     .shop:hover{transform:translateY(-2px); opacity:1}
-  .shop img{height:28px; width:auto; display:block}
+  .shop img{height:26px; width:auto; display:inline-block}
   </style>
 </head>
 <body>
@@ -71,6 +71,12 @@
         </a>
         <a class="shop" href="https://www.fnac.es/SearchResult/ResultList.aspx?Search=km0+pablo+alborán&sft=1&sa=hist" target="_blank" rel="noopener noreferrer" aria-label="Precomprar en Fnac">
           <img src="icons/fnac.svg" alt="Fnac" />
+        </a>
+        <a class="shop" href="https://www.lacasadeldisco.es/jolisearch?s=km0+pablo+alboran" target="_blank" rel="noopener noreferrer" aria-label="Precomprar en La Casa del Disco">
+          <img src="icons/casa.svg" alt="La Casa del Disco" />
+        </a>
+        <a class="shop" href="https://www.d2fy.es/search?type=product&options%5Bprefix%5D=last&options%5Bunavailable_products%5D=last&q=pablo+alboran+km0&type=product&options%5Bprefix%5D=last&options%5Bunavailable_products%5D=last" target="_blank" rel="noopener noreferrer" aria-label="Precomprar en D2fy">
+          <img src="icons/d2fy.svg" alt="D2fy" />
         </a>
       </nav>
     </section>
