@@ -323,6 +323,20 @@ font-family: "TuskerGrotesk", system-ui, sans-serif !important;
 #shops{margin-top:16px}
 .shops-note{margin:0 0 10px;opacity:.9}
 .shops-grid{display:flex;flex-wrap:wrap;gap:16px 24px;justify-content:center;align-items:center}
+
+.form-note {
+  margin-top: 10px;
+  font-family: 'Cuerpo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555; /* si este bloque está sobre fondo rojo, cámbialo a rgba(255,255,255,0.8) */
+  text-align: center;
+}
+
+.form-note span {
+  font-weight: 600;
+}
+
 .shops-grid img{height:26px;width:auto;display:block}
 
 
