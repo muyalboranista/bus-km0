@@ -3,8 +3,6 @@
  **********************************************************/
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
-const API_SECRET      = "km0";
 
 /* --------- UI: abrir/cerrar formulario --------- */
 const joinSec = document.getElementById('join');
