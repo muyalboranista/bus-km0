@@ -3,6 +3,7 @@
  **********************************************************/
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0";
+const DRIVE_FOLDER_ID = '1P4RkG5XKkdXvEFvc4Yw5Aiy5Dx80PorV'; 
 
 /* --------- UI: abrir/cerrar formulario --------- */
 const joinSec = document.getElementById('join');
@@ -29,23 +30,23 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   const btn = f.querySelector('button[type="submit"]');
 
   try{
-    btn.disabled = true;
-    msg.textContent = 'Preparando tu foto...';
-
     const file = f.foto.files[0];
     if (!file) throw new Error('Selecciona una imagen');
 
-    // 1) Convertimos el archivo a base64 (dataURL)
-    const base64 = await new Promise((resolve, reject)=>{
-      const reader = new FileReader();
-      reader.onload  = e => resolve(e.target.result); // data:image/...;base64,XXXX
-      reader.onerror = err => reject(err);
-      reader.readAsDataURL(file);
-    });
+    btn.disabled = true;
+    msg.textContent = 'Procesando foto...';
 
-    msg.textContent = 'Enviando datos...';
+    // 1) Pasar el archivo a base64
+    const base64 = await fileToBase64(file);   // ver función justo debajo
 
-    // 2) Montamos el payload en JSON
+    // extraer mimeType de la cabecera dataURL
+    const [meta, b64data] = base64.split(',');
+    const mimeMatch = meta.match(/data:(.*);base64/);
+    const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+
+    msg.textContent = 'Subiendo y guardando datos...';
+
+    // 2) Enviar todo como JSON a Apps Script
     const payload = {
       secret: API_SECRET,
       nombre: f.nombre.value.trim(),
@@ -53,27 +54,24 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
       usuario: '@' + f.usuario.value.replace(/^@/,'').trim(),
       ciudad: f.ciudad.value.trim(),
       pais:   f.pais.value.trim(),
-
-      // NUEVO: info de la foto
-      fotoBase64: base64,
-      fotoMime:   file.type || 'image/jpeg',
-      fotoNombre: file.name || 'km0.jpg'
+      fileName: file.name,
+      mimeType,
+      fileData: b64data // solo la parte base64
     };
 
-    // 3) Enviamos al WebApp como JSON
     const r = await fetch(APPS_SCRIPT_URL, {
-      method:'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    if (!r.ok) throw new Error(`Apps Script ${r.status}`);
+    if(!r.ok) throw new Error(`Apps Script ${r.status}`);
     const out = await r.json().catch(()=> ({}));
-    if (out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
+    if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
 
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
-    f.reset();
-    if (preview) preview.src = '';
+    f.reset(); 
+    preview.src='';
     setTimeout(()=> joinSec.classList.remove('open'), 1500);
 
   }catch(err){
@@ -83,6 +81,17 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     btn.disabled = false;
   }
 });
+
+// Helper para obtener base64 de un File
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
 
 /* --------- Poblado de países + sugerencias --------- */
 const COUNTRIES = ["España","Argentina","México","Colombia","Chile","Perú","Uruguay","Paraguay","Bolivia","Ecuador","Venezuela","Costa Rica","Panamá","Guatemala","Honduras","El Salvador","Nicaragua","República Dominicana","Puerto Rico","Estados Unidos","Canadá","Brasil","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Bélgica","Países Bajos","Luxemburgo","Suiza","Austria","Polonia","Hungría","República Checa","Eslovaquia","Eslovenia","Croacia","Bosnia y Herzegovina","Serbia","Rumanía","Bulgaria","Grecia","Turquía","Ucrania","Rusia","Suecia","Noruega","Dinamarca","Finlandia","Islandia","Estonia","Letonia","Lituania","Andorra","Mónaco","San Marino","Malta","Chipre","Marruecos","Argelia","Túnez","Egipto","Israel","Líbano","Jordania","Arabia Saudí","Emiratos Árabes Unidos","Qatar","Bahréin","Kuwait","Omán","Sudáfrica","Etiopía","Kenia","Tanzania","Nigeria","Ghana","India","Pakistán","Bangladés","Sri Lanka","Nepal","China","Japón","Corea del Sur","Filipinas","Indonesia","Malasia","Singapur","Tailandia","Vietnam","Australia","Nueva Zelanda"];
