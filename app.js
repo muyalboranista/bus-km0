@@ -1,8 +1,8 @@
 /**********************************************************
- * KM0 – Front JS (Cloudinary + Apps Script)
+ * KM0 – Front JS
  **********************************************************/
-const CLOUD_NAME      = "drhkixsov";
-const UPLOAD_PRESET   = "km0_public";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
+const API_SECRET      = "km0";
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0";
 
@@ -23,20 +23,7 @@ fileInput?.addEventListener('change', ()=>{
   preview.src = f ? URL.createObjectURL(f) : '';
 });
 
-/* --------- Subida a Cloudinary --------- */
-async function uploadToCloudinary(file){
-  const fd = new FormData();
-  fd.append('file', file);
-  fd.append('upload_preset', UPLOAD_PRESET);
-  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
-  const res = await fetch(url, { method:'POST', body: fd });
-  if(!res.ok) throw new Error('Cloudinary: ' + (await res.text().catch(()=>res.status)));
-  const j = await res.json();
-  if(!j.secure_url) throw new Error('Cloudinary no devolvió URL');
-  return j.secure_url;
-}
-
-/* --------- Envío a Apps Script (FormData, sin headers) --------- */
+/* --------- Envío a Apps Script (JSON con foto en base64) --------- */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -45,29 +32,52 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 
   try{
     btn.disabled = true;
-    msg.textContent = 'Subiendo foto...';
+    msg.textContent = 'Preparando tu foto...';
+
     const file = f.foto.files[0];
-    if(!file) throw new Error('Selecciona una imagen');
-    const fotoUrl = await uploadToCloudinary(file);
+    if (!file) throw new Error('Selecciona una imagen');
 
-    msg.textContent = 'Guardando datos...';
-    const fd2 = new FormData();
-    fd2.append('secret', API_SECRET);
-    fd2.append('nombre', f.nombre.value.trim());
-    fd2.append('red_social', f.red_social.value);
-    fd2.append('usuario', '@' + f.usuario.value.replace(/^@/,'').trim());
-    fd2.append('ciudad', f.ciudad.value.trim());
-    fd2.append('pais',   f.pais.value.trim());
-    fd2.append('foto',   fotoUrl);
+    // 1) Convertimos el archivo a base64 (dataURL)
+    const base64 = await new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload  = e => resolve(e.target.result); // data:image/...;base64,XXXX
+      reader.onerror = err => reject(err);
+      reader.readAsDataURL(file);
+    });
 
-    const r = await fetch(APPS_SCRIPT_URL, { method:'POST', body: fd2 });
-    if(!r.ok) throw new Error(`Apps Script ${r.status}`);
+    msg.textContent = 'Enviando datos...';
+
+    // 2) Montamos el payload en JSON
+    const payload = {
+      secret: API_SECRET,
+      nombre: f.nombre.value.trim(),
+      red_social: f.red_social.value,
+      usuario: '@' + f.usuario.value.replace(/^@/,'').trim(),
+      ciudad: f.ciudad.value.trim(),
+      pais:   f.pais.value.trim(),
+
+      // NUEVO: info de la foto
+      fotoBase64: base64,
+      fotoMime:   file.type || 'image/jpeg',
+      fotoNombre: file.name || 'km0.jpg'
+    };
+
+    // 3) Enviamos al WebApp como JSON
+    const r = await fetch(APPS_SCRIPT_URL, {
+      method:'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!r.ok) throw new Error(`Apps Script ${r.status}`);
     const out = await r.json().catch(()=> ({}));
-    if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
+    if (out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
 
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
-    f.reset(); preview.src='';
+    f.reset();
+    if (preview) preview.src = '';
     setTimeout(()=> joinSec.classList.remove('open'), 1500);
+
   }catch(err){
     console.error(err);
     msg.textContent = 'Error: ' + err.message;
