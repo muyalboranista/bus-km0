@@ -59,11 +59,14 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
       fileData: b64data // solo la parte base64
     };
 
-    const r = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    // 3) Enviamos al WebApp como FormData (sin headers → sin CORS raro)
+const fd = new FormData();
+Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
+
+const r = await fetch(APPS_SCRIPT_URL, {
+  method: 'POST',
+  body: fd
+});
 
     if(!r.ok) throw new Error(`Apps Script ${r.status}`);
     const out = await r.json().catch(()=> ({}));
