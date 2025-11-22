@@ -30,70 +30,37 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   const btn = f.querySelector('button[type="submit"]');
 
   try{
-    const file = f.foto.files[0];
-    if (!file) throw new Error('Selecciona una imagen');
-
     btn.disabled = true;
-    msg.textContent = 'Procesando foto...';
+    msg.textContent = 'Subiendo foto...';
 
-    // 1) Pasar el archivo a base64
-    const base64 = await fileToBase64(file);   // ver función justo debajo
+    const file = f.foto.files[0];
+    if(!file) throw new Error('Selecciona una imagen');
 
-    // extraer mimeType de la cabecera dataURL
-    const [meta, b64data] = base64.split(',');
-    const mimeMatch = meta.match(/data:(.*);base64/);
-    const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    // --- Subir directamente a Apps Script ---
+    const fd2 = new FormData();
+    fd2.append('secret', API_SECRET);
+    fd2.append('nombre', f.nombre.value.trim());
+    fd2.append('red_social', f.red_social.value);
+    fd2.append('usuario', '@' + f.usuario.value.replace(/^@/,'').trim());
+    fd2.append('ciudad', f.ciudad.value.trim());
+    fd2.append('pais',   f.pais.value.trim());
+    fd2.append('foto_blob', file); // 🚀 AQUÍ VA LA IMAGEN REAL
 
-    msg.textContent = 'Subiendo y guardando datos...';
-
-    // 2) Enviar todo como JSON a Apps Script
-    const payload = {
-      secret: API_SECRET,
-      nombre: f.nombre.value.trim(),
-      red_social: f.red_social.value,
-      usuario: '@' + f.usuario.value.replace(/^@/,'').trim(),
-      ciudad: f.ciudad.value.trim(),
-      pais:   f.pais.value.trim(),
-      fileName: file.name,
-      mimeType,
-      fileData: b64data // solo la parte base64
-    };
-
-    // 3) Enviamos al WebApp como FormData (sin headers → sin CORS raro)
-const fd = new FormData();
-Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
-
-const r = await fetch(APPS_SCRIPT_URL, {
-  method: 'POST',
-  body: fd
-});
-
+    const r = await fetch(APPS_SCRIPT_URL, { method:'POST', body: fd2 });
     if(!r.ok) throw new Error(`Apps Script ${r.status}`);
     const out = await r.json().catch(()=> ({}));
     if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
 
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
-    f.reset(); 
-    preview.src='';
+    f.reset(); preview.src='';
     setTimeout(()=> joinSec.classList.remove('open'), 1500);
-
   }catch(err){
-    console.error(err);
     msg.textContent = 'Error: ' + err.message;
   }finally{
     btn.disabled = false;
   }
 });
 
-// Helper para obtener base64 de un File
-function fileToBase64(file){
-  return new Promise((resolve, reject)=>{
-    const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
 
 
 /* --------- Poblado de países + sugerencias --------- */
