@@ -8,6 +8,7 @@ const API_SECRET      = "km0";
 const joinSec = document.getElementById('join');
 document.getElementById('ctaLink')?.addEventListener('click', (e)=>{
   e.preventDefault();
+  if (!joinSec) return;
   joinSec.classList.toggle('open');
   joinSec.setAttribute('aria-hidden', joinSec.classList.contains('open') ? 'false' : 'true');
   if (joinSec.classList.contains('open')) joinSec.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -80,7 +81,7 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
     f.reset();
     preview.src = '';
-    setTimeout(()=> joinSec.classList.remove('open'), 1500);
+    setTimeout(()=> joinSec?.classList.remove('open'), 1500);
 
   }catch(err){
     console.error(err);
@@ -106,12 +107,14 @@ function populateCountries(){
 }
 document.addEventListener('DOMContentLoaded', populateCountries);
 
+// Si tienes tu objeto real, sustitúyelo aquí:
 const CITY_SUGGESTIONS = { /* … (tu objeto igual que antes) … */ };
+
 function updateCitySuggestions(){
   const selPais = document.getElementById('pais');
   const dl = document.getElementById('ciudadSuggestions');
   const inputCiudad = document.getElementById('ciudad');
-  if(!selPais || !dl) return;
+  if(!selPais || !dl || !inputCiudad) return;
   const list = CITY_SUGGESTIONS[selPais.value] || [];
   dl.innerHTML = '';
   if(list.length){
@@ -149,7 +152,7 @@ function iconFor(red=''){
   if (r.includes('insta'))      return svg('insta');
   if (r.includes('tiktok'))     return svg('tiktok');
   if (r.includes('threads'))    return svg('threads');
-  if (r.includes('face')||r.includes('fb')) return svg('fb');
+  if (r.includes('face')||r.includes('fb')) return svg('insta'); // fallback
   if (r.includes('twitter')||r === 'x')     return svg('x');
   return svg(); // fallback
 }
@@ -181,34 +184,38 @@ function titleCaseEs(str = '') {
 window.addEventListener('load', loadData);
 
 async function loadData(){
-  const url = APPS_SCRIPT_URL + '?_=' + Date.now();
-  const res = await fetch(url, { cache:'no-store' });
-  const data = await res.json();
+  try {
+    const url = APPS_SCRIPT_URL + '?_=' + Date.now();
+    const res = await fetch(url, { cache:'no-store' });
+    const data = await res.json();
 
-  // contador de km
-  drawCounter(data.totalKm || 0);
+    // contador de km
+    drawCounter(data.totalKm || 0);
 
-  // ordena por fecha (más reciente primero); si falta fecha, cae al acumulado
-  const list = (data.pasajeros || []).slice().sort((a,b)=>{
-    const tb = Date.parse(b.timestamp || '') || 0;
-    const ta = Date.parse(a.timestamp || '') || 0;
-    if (tb !== ta) return tb - ta;
-    return (b.km_acumulados||0) - (a.km_acumulados||0);
-  });
+    // ordena por fecha (más reciente primero); si falta fecha, cae al acumulado
+    const list = (data.pasajeros || []).slice().sort((a,b)=>{
+      const tb = Date.parse(b.timestamp || '') || 0;
+      const ta = Date.parse(a.timestamp || '') || 0;
+      if (tb !== ta) return tb - ta;
+      return (b.km_acumulados||0) - (a.km_acumulados||0);
+    });
 
-  // pinta tarjetas (con paginación simple)
-  drawPaged(list);
+    // pinta tarjetas (con paginación simple)
+    drawPaged(list);
 
-  // badge con número de pasajeros junto al título
-  const h = document.querySelector('.gallery h2');
-  if (h){
-    let badge = h.querySelector('.count-badge');
-    if (!badge){
-      badge = document.createElement('span');
-      badge.className = 'count-badge';
-      h.appendChild(badge);
+    // badge con número de pasajeros junto al título
+    const h = document.querySelector('.gallery h2');
+    if (h){
+      let badge = h.querySelector('.count-badge');
+      if (!badge){
+        badge = document.createElement('span');
+        badge.className = 'count-badge';
+        h.appendChild(badge);
+      }
+      badge.textContent = String(list.length);
     }
-    badge.textContent = String(list.length);
+  } catch (err) {
+    console.error('Error cargando datos:', err);
   }
 }
 
@@ -232,7 +239,7 @@ function drawCards(list){
     const nombre     = (p.nombre || '').trim();
     const usuario    = normalizeHandle(p.usuario || '');
     const ubicacion  = titleCaseEs(p.ubicacion || '');
-    the kmsAdd     = Number(p.km_desde_anterior || 0);
+    const kmsAdd     = Number(p.km_desde_anterior || 0);
 
     const userIcon = iconFor(p.red_social).replace('class="icon"', 'class="icon user"');
     const pinIcon  = svg('pin').replace('class="icon"', 'class="icon pin"');
@@ -293,9 +300,9 @@ function drawPaged(list){
   more.style.display = (slice.length < fullList.length) ? 'inline-block' : 'none';
 }
 
-console.log("app.js v1 cargado");
+console.log("app.js KM0 cargado");
 
-document.getElementById('toggle-shops').addEventListener('click', ()=>{
+document.getElementById('toggle-shops')?.addEventListener('click', ()=>{
   const box = document.getElementById('shops');
-  box.hidden = !box.hidden;
+  if (box) box.hidden = !box.hidden;
 });
