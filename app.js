@@ -3,7 +3,6 @@
  **********************************************************/
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0";
-// const DRIVE_FOLDER_ID = '1P4RkG5XKkdXvEFvc4Yw5Aiy5Dx80PorV'; // ya no se usa en el front
 
 /* --------- UI: abrir/cerrar formulario --------- */
 const joinSec = document.getElementById('join');
@@ -22,7 +21,21 @@ fileInput?.addEventListener('change', ()=>{
   preview.src = f ? URL.createObjectURL(f) : '';
 });
 
-/* --------- Envío a Apps Script (FormData con archivo) --------- */
+/* --------- Función auxiliar: archivo -> base64 --------- */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result || '';
+      // result será un dataURL: "data:image/png;base64,AAAA..."
+      resolve(String(result));
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* --------- Envío a Apps Script (FormData + archivo + base64) --------- */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -36,6 +49,9 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     const file = f.foto.files[0];
     if (!file) throw new Error('Selecciona una imagen');
 
+    // También generamos base64 como copia de seguridad
+    const dataUrl = await fileToBase64(file);
+
     msg.textContent = 'Guardando datos...';
 
     // Mandamos TODO el formulario, incluido el archivo "foto"
@@ -43,6 +59,11 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 
     // Nos aseguramos de que el secret va incluido
     fd.append('secret', API_SECRET);
+
+    // Copia en base64 por si e.files falla en Apps Script
+    fd.append('fotoBase64', dataUrl);
+    fd.append('fotoMime',   file.type || 'image/jpeg');
+    fd.append('fotoNombre', file.name || 'km0.jpg');
 
     const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -211,7 +232,7 @@ function drawCards(list){
     const nombre     = (p.nombre || '').trim();
     const usuario    = normalizeHandle(p.usuario || '');
     const ubicacion  = titleCaseEs(p.ubicacion || '');
-    const kmsAdd     = Number(p.km_desde_anterior || 0);
+    the kmsAdd     = Number(p.km_desde_anterior || 0);
 
     const userIcon = iconFor(p.red_social).replace('class="icon"', 'class="icon user"');
     const pinIcon  = svg('pin').replace('class="icon"', 'class="icon pin"');
