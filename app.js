@@ -37,7 +37,7 @@ function fileToBase64(file) {
   });
 }
 
-/* --------- Envío a Apps Script (JSON + base64) --------- */
+/* --------- Envío a Apps Script (FormData + base64) --------- */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -56,24 +56,23 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
 
     msg.textContent = 'Guardando datos...';
 
-    const payload = {
-      secret    : API_SECRET,
-      nombre    : f.nombre.value.trim(),
-      red_social: f.red_social.value,
-      usuario   : '@' + f.usuario.value.replace(/^@/, '').trim(),
-      ciudad    : f.ciudad.value.trim(),
-      pais      : f.pais.value.trim(),
+    // Usamos FormData (sin headers) para evitar problemas de CORS
+    const fd2 = new FormData();
+    fd2.append('secret', API_SECRET);
+    fd2.append('nombre', f.nombre.value.trim());
+    fd2.append('red_social', f.red_social.value);
+    fd2.append('usuario', '@' + f.usuario.value.replace(/^@/,'').trim());
+    fd2.append('ciudad', f.ciudad.value.trim());
+    fd2.append('pais',   f.pais.value.trim());
 
-      // datos de la imagen
-      fotoBase64: dataUrl,
-      fotoMime  : file.type || 'image/jpeg',
-      fotoNombre: file.name || 'km0.jpg'
-    };
+    // Datos de la imagen
+    fd2.append('fotoBase64', dataUrl);
+    fd2.append('fotoMime',   file.type || 'image/jpeg');
+    fd2.append('fotoNombre', file.name || 'km0.jpg');
 
     const r = await fetch(APPS_SCRIPT_URL, {
-      method : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify(payload)
+      method: 'POST',
+      body: fd2
     });
 
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -95,7 +94,6 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     btn.disabled = false;
   }
 });
-
 
 
 /* --------- Poblado de países + sugerencias --------- */
