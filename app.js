@@ -3,7 +3,7 @@
  **********************************************************/
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEn9EIxVBKVbXbrv4BrRhm7kRZHalUtWUU66jbtY80scAkRdqZQSztQfnDt7G0GrUU/exec";
 const API_SECRET      = "km0";
-const DRIVE_FOLDER_ID = '1P4RkG5XKkdXvEFvc4Yw5Aiy5Dx80PorV'; 
+// const DRIVE_FOLDER_ID = '1P4RkG5XKkdXvEFvc4Yw5Aiy5Dx80PorV'; // ya no se usa en el front
 
 /* --------- UI: abrir/cerrar formulario --------- */
 const joinSec = document.getElementById('join');
@@ -22,22 +22,7 @@ fileInput?.addEventListener('change', ()=>{
   preview.src = f ? URL.createObjectURL(f) : '';
 });
 
-/* --------- Envío a Apps Script (JSON con foto en base64) --------- */
-/* --------- Función auxiliar: archivo -> base64 --------- */
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result || '';
-      // result será un dataURL: "data:image/png;base64,AAAA..."
-      resolve(String(result));
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-/* --------- Envío a Apps Script (FormData + base64) --------- */
+/* --------- Envío a Apps Script (FormData con archivo) --------- */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -51,28 +36,17 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     const file = f.foto.files[0];
     if (!file) throw new Error('Selecciona una imagen');
 
-    // Convertimos a base64 (dataURL)
-    const dataUrl = await fileToBase64(file);
-
     msg.textContent = 'Guardando datos...';
 
-    // Usamos FormData (sin headers) para evitar problemas de CORS
-    const fd2 = new FormData();
-    fd2.append('secret', API_SECRET);
-    fd2.append('nombre', f.nombre.value.trim());
-    fd2.append('red_social', f.red_social.value);
-    fd2.append('usuario', '@' + f.usuario.value.replace(/^@/,'').trim());
-    fd2.append('ciudad', f.ciudad.value.trim());
-    fd2.append('pais',   f.pais.value.trim());
+    // Mandamos TODO el formulario, incluido el archivo "foto"
+    const fd = new FormData(f);
 
-    // Datos de la imagen
-    fd2.append('fotoBase64', dataUrl);
-    fd2.append('fotoMime',   file.type || 'image/jpeg');
-    fd2.append('fotoNombre', file.name || 'km0.jpg');
+    // Nos aseguramos de que el secret va incluido
+    fd.append('secret', API_SECRET);
 
     const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      body: fd2
+      body: fd   // nada de JSON.stringify ni headers Content-Type
     });
 
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -135,7 +109,6 @@ document.getElementById('pais')?.addEventListener('change', updateCitySuggestion
 document.addEventListener('DOMContentLoaded', updateCitySuggestions);
 
 /* --------- Iconos SVG pequeños (inline) --------- */
-/* --------- Iconos pequeños desde archivos .svg --------- */
 function svg(name){
   const map = {
     insta:    'instagram.svg',
@@ -149,7 +122,6 @@ function svg(name){
   // Usa ruta relativa para que funcione igual en tu PC y en GitHub Pages
   return `<img class="icon" src="./icons/${file}" alt="" aria-hidden="true">`;
 }
-
 
 function iconFor(red=''){
   const r = String(red).toLowerCase();
@@ -299,12 +271,10 @@ function drawPaged(list){
   }
   more.style.display = (slice.length < fullList.length) ? 'inline-block' : 'none';
 }
+
 console.log("app.js v1 cargado");
 
 document.getElementById('toggle-shops').addEventListener('click', ()=>{
   const box = document.getElementById('shops');
   box.hidden = !box.hidden;
 });
-
-
-
