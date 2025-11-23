@@ -23,6 +23,21 @@ fileInput?.addEventListener('change', ()=>{
 });
 
 /* --------- Envío a Apps Script (JSON con foto en base64) --------- */
+/* --------- Función auxiliar: archivo -> base64 --------- */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result || '';
+      // result será un dataURL: "data:image/png;base64,AAAA..."
+      resolve(String(result));
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* --------- Envío a Apps Script (JSON + base64) --------- */
 document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
   const f   = ev.currentTarget;
@@ -34,27 +49,47 @@ document.getElementById('joinForm')?.addEventListener('submit', async (ev)=>{
     msg.textContent = 'Subiendo foto...';
 
     const file = f.foto.files[0];
-    if(!file) throw new Error('Selecciona una imagen');
+    if (!file) throw new Error('Selecciona una imagen');
 
-    // --- Subir directamente a Apps Script ---
-    const fd2 = new FormData();
-    fd2.append('secret', API_SECRET);
-    fd2.append('nombre', f.nombre.value.trim());
-    fd2.append('red_social', f.red_social.value);
-    fd2.append('usuario', '@' + f.usuario.value.replace(/^@/,'').trim());
-    fd2.append('ciudad', f.ciudad.value.trim());
-    fd2.append('pais',   f.pais.value.trim());
-    fd2.append('foto_blob', file); // 🚀 AQUÍ VA LA IMAGEN REAL
+    // Convertimos a base64 (dataURL)
+    const dataUrl = await fileToBase64(file);
 
-    const r = await fetch(APPS_SCRIPT_URL, { method:'POST', body: fd2 });
-    if(!r.ok) throw new Error(`Apps Script ${r.status}`);
+    msg.textContent = 'Guardando datos...';
+
+    const payload = {
+      secret    : API_SECRET,
+      nombre    : f.nombre.value.trim(),
+      red_social: f.red_social.value,
+      usuario   : '@' + f.usuario.value.replace(/^@/, '').trim(),
+      ciudad    : f.ciudad.value.trim(),
+      pais      : f.pais.value.trim(),
+
+      // datos de la imagen
+      fotoBase64: dataUrl,
+      fotoMime  : file.type || 'image/jpeg',
+      fotoNombre: file.name || 'km0.jpg'
+    };
+
+    const r = await fetch(APPS_SCRIPT_URL, {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(payload)
+    });
+
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     const out = await r.json().catch(()=> ({}));
-    if(out.ok !== true) throw new Error(out.error || 'No se pudo guardar');
+
+    if (out.ok !== true){
+      throw new Error(out.error || 'No se pudo guardar');
+    }
 
     msg.textContent = '¡Enviado! Tu alta queda pendiente de aprobación.';
-    f.reset(); preview.src='';
+    f.reset();
+    preview.src = '';
     setTimeout(()=> joinSec.classList.remove('open'), 1500);
+
   }catch(err){
+    console.error(err);
     msg.textContent = 'Error: ' + err.message;
   }finally{
     btn.disabled = false;
