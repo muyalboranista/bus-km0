@@ -597,7 +597,8 @@
 <section id="join" class="join" aria-hidden="true">
   <h3 class="display" style="margin:0 0 .5rem 0">Súbete al bus</h3>
 
-  <form id="joinForm" autocomplete="on">
+  <form id="joinForm" autocomplete="on" enctype="multipart/form-data">
+    <input type="hidden" name="secret" value="km0">
     <div class="grid">
       <label>Nombre
         <input name="nombre" required maxlength="60">
